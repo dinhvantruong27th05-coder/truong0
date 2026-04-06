@@ -1,233 +1,863 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Memory Album</title>
-
-  <!-- FONT -->
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-
-  <!-- CSS -->
+  <title>Memory Album Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-  *{
-    margin: 0;
-    padding: 0;
-    user-select: none;
-    cursor: auto;
-    box-sizing: border-box;
-    font-family: 'Pacifico', cursive;
-  }
-  body {
-    margin: 0;
-    background: #f0ebe3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
-  }
-
-  .book {
-    position: relative;
-    width: 300px;
-    height: 400px;
-    perspective: 2000px;
-  }
-
-  .page {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    transform-style: preserve-3d;
-    transform-origin: left;
-    transition: transform 1s ease;
-    cursor: pointer;
-    border: 3px solid #888;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    background: white;
-  }
-
-  .page .front,
-  .page .back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-
-  .page img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border: 2px solid #444;
-    border-radius: 6px;
-  }
-
-  .page .back {
-    transform: rotateY(180deg);
-  }
-
-  .page.flipped {
-    transform: rotateY(-180deg);
-  }
-
-  .intro-content, .end-content {
-    text-align: center;
-    border: 3px solid black;
-    padding: 10px;
-    border-radius: 15%;
-    background: linear-gradient(135deg, #f5f7fa, #e0e4e8);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .intro-content h1 {
-    font-size: 24px;
-    color: #fb18c2;
-    margin-bottom: 10px;
-  }
-
-  .end-content h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #333;
-  }
-
-  .end-content span {
-    font-size: 14px;
-    color: #777;
-  }
-  </style>
-</head>
-
-<body>
-
-<div class="book" id="book"></div>
-
-<audio id="sound" loop>
-  <source src="KhoBau.mp3" type="audio/mpeg" />
-</audio>
-
-<script>
-// ===== JS =====
-const book = document.getElementById('book');
-const pages = [];
-const sound = document.getElementById("sound");
-
-document.addEventListener("click", () => {
-  if (sound.paused) {
-    sound.currentTime = 11;
-    sound.play().catch(err => console.log("Không phát được nhạc:", err));
-  }
-}, { once: true });
-
-const introPage = document.createElement('div');
-introPage.className = 'page';
-introPage.style.zIndex = 100;
-
-introPage.innerHTML = `
-  <div class="front">
-    <div class="intro-content">
-      <h1>Memory Album</h1>
-      <div><em>Reiyo Matsumoto</em></div>
-      <div>🎁❤️🎁</div>
-    </div>
-  </div>
-  <div class="back"></div>
-`;
-book.appendChild(introPage);
-pages.push(introPage);
-
-// ảnh
-const images = [];
-for (let i = 1; i <= 20; i++) {
-  images.push(`Anh (${i}).jpg`);
-}
-
-for (let i = 0; i < images.length; i += 2) {
-  const page = document.createElement('div');
-  page.className = 'page';
-  page.style.zIndex = 99 - i;
-
-  page.innerHTML = `
-    <div class="front"><img src="${images[i]}"></div>
-    <div class="back">${images[i+1] ? `<img src="${images[i+1]}">` : ""}</div>
-  `;
-
-  book.appendChild(page);
-  pages.push(page);
-}
-
-const endPage = document.createElement('div');
-endPage.className = 'page';
-endPage.style.zIndex = 0;
-
-endPage.innerHTML = `
-  <div class="front">
-    <div class="end-content">
-      <h2>❤️ I Love You ❤️</h2>
-      <span id="ending-text"></span>
-    </div>
-  </div>
-  <div class="back"></div>
-`;
-book.appendChild(endPage);
-pages.push(endPage);
-
-// hiệu ứng gõ chữ
-function typewriterEffect(text, element, speed = 40) {
-  let i = 0;
-  function type() {
-    if (i < text.length) {
-      element.innerHTML += text[i] === '\\n' ? '<br>' : text[i];
-      i++;
-      setTimeout(type, speed);
+    :root {
+      --bg: linear-gradient(135deg, #f3ede7 0%, #efe4d8 100%);
+      --card: rgba(255,255,255,0.85);
+      --border: rgba(96, 78, 61, 0.18);
+      --text: #4c3b2f;
+      --muted: #8b7362;
+      --accent: #e88eb0;
+      --accent-2: #f5c8d8;
+      --shadow: 0 18px 50px rgba(88, 62, 44, 0.16);
+      --radius: 24px;
     }
-  }
-  type();
-}
 
-let typed = false;
+    * { box-sizing: border-box; }
 
-pages.forEach((page, index) => {
-  const front = page.querySelector('.front');
-  const back = page.querySelector('.back');
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
 
-  const flipForward = () => {
-    if (!page.classList.contains('flipped')) {
-      page.classList.add('flipped');
+    body {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+      padding: 24px;
+    }
 
-      if (index === pages.length - 2 && !typed) {
-        const endText = document.getElementById('ending-text');
-        const content = `I love three things in this world: The sun ☀️, the moon 🌕 and you ❤️.
-The sun for the morning, the moon for the night and you, forever ❤️❤️❤️`;
-        setTimeout(() => typewriterEffect(content, endText), 800);
-        typed = true;
+    .panel {
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-self: start;
+      position: sticky;
+      top: 24px;
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #f7cfe0, #f4e2c9);
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.6);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .input, .textarea {
+      width: 100%;
+      border: 1px solid rgba(96, 78, 61, 0.14);
+      background: rgba(255,255,255,0.9);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font: inherit;
+      color: var(--text);
+      outline: none;
+      transition: .2s ease;
+    }
+
+    .input:focus, .textarea:focus {
+      border-color: rgba(232, 142, 176, 0.7);
+      box-shadow: 0 0 0 4px rgba(232, 142, 176, 0.12);
+    }
+
+    .textarea {
+      min-height: 110px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .controls {
+      display: grid;
+      gap: 10px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #eb93b5, #d886ad);
+      color: white;
+      box-shadow: 0 12px 24px rgba(216, 134, 173, 0.28);
+    }
+
+    .btn-soft {
+      background: rgba(255,255,255,0.9);
+      color: var(--text);
+      border: 1px solid rgba(96, 78, 61, 0.12);
+    }
+
+    .btn-danger {
+      background: #fff1f4;
+      color: #cb5578;
+      border: 1px solid #f3bfd0;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .thumb-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .thumb {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #f7f0ea;
+      border: 1px solid rgba(96, 78, 61, 0.12);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb button {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 24px;
+      height: 24px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.58);
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .headline h2 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 34px);
+      font-family: 'Pacifico', cursive;
+      font-weight: 400;
+      color: #d6739f;
+    }
+
+    .headline p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .stage {
+      min-height: 76vh;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.85), rgba(255,255,255,0.3) 35%, transparent 36%),
+        linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+      border: 1px solid rgba(255,255,255,0.45);
+    }
+
+    .book-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .book {
+      position: relative;
+      width: min(360px, 82vw);
+      aspect-ratio: 3 / 4;
+      perspective: 2400px;
+      filter: drop-shadow(0 26px 36px rgba(72, 50, 40, 0.18));
+    }
+
+    .page {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transform-origin: left center;
+      transition: transform 1s ease, box-shadow .3s ease;
+      border-radius: 24px;
+      cursor: pointer;
+    }
+
+    .page.flipped { transform: rotateY(-180deg); }
+
+    .page-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid rgba(96, 78, 61, 0.12);
+      box-shadow: 0 10px 26px rgba(69, 45, 36, 0.1);
+    }
+
+    .page-front,
+    .page-back {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    .page-back { transform: rotateY(180deg); }
+
+    .page-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 18px;
+      display: block;
+      background: #f3ede7;
+    }
+
+    .cover,
+    .ending {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 22px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.95), rgba(248,237,242,0.95)),
+        linear-gradient(135deg, #f6d8e6, #f6ead9);
+      border: 1px solid rgba(214, 166, 190, 0.25);
+    }
+
+    .cover h3,
+    .ending h3 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 34px);
+      font-family: 'Pacifico', cursive;
+      font-weight: 400;
+      color: #da6c9a;
+    }
+
+    .cover p,
+    .ending p,
+    .ending .typing {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .nav-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(96, 78, 61, 0.12);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .empty-state {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+      min-height: 420px;
+    }
+
+    .footer-note {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 1024px) {
+      body {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        max-height: none;
       }
     }
-  };
 
-  const flipBackward = () => {
-    if (page.classList.contains('flipped')) {
-      page.classList.remove('flipped');
+    @media (max-width: 640px) {
+      body { padding: 12px; }
+      .sidebar, .main { padding: 14px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .thumb-list { grid-template-columns: repeat(4, 1fr); }
+      .book { width: min(320px, 92vw); }
     }
-  };
+  </style>
+</head>
+<body>
+  <aside class="panel sidebar">
+    <div class="brand">
+      <div class="brand-badge">💖</div>
+      <div>
+        <h1>Memory Album Pro</h1>
+        <p>Không cần up thư mục ảnh, chỉ cần dán link.</p>
+      </div>
+    </div>
 
-  front.onclick = flipForward;
-  back.onclick = flipBackward;
-});
-</script>
+    <div>
+      <p class="section-title">Thông tin album</p>
+      <div class="controls">
+        <input id="albumTitle" class="input" value="Memory Album" placeholder="Tên album">
+        <input id="albumSubtitle" class="input" value="Reiyo Matsumoto" placeholder="Dòng phụ đề / tên người nhận">
+        <textarea id="endingMessage" class="textarea" placeholder="Lời nhắn cuối album">I love three things in this world: The sun ☀️, the moon 🌕 and you ❤️.
+The sun for the morning, the moon for the night and you, forever ❤️❤️❤️</textarea>
+      </div>
+    </div>
 
+    <div>
+      <p class="section-title">Thêm ảnh bằng link</p>
+      <div class="controls">
+        <input id="imageUrl" class="input" placeholder="Dán link ảnh trực tiếp rồi bấm Thêm ảnh">
+        <div class="grid-2">
+          <button id="addImageBtn" class="btn btn-primary">Thêm ảnh</button>
+          <button id="addSampleBtn" class="btn btn-soft">Thêm ảnh mẫu</button>
+        </div>
+        <textarea id="bulkUrls" class="textarea" placeholder="Dán nhiều link, mỗi dòng 1 link"></textarea>
+        <div class="grid-2">
+          <button id="addBulkBtn" class="btn btn-soft">Thêm nhiều ảnh</button>
+          <button id="saveBtn" class="btn btn-soft">Lưu trình duyệt</button>
+        </div>
+      </div>
+      <p class="hint">Nên dùng link ảnh trực tiếp dạng .jpg, .png, .webp. Ảnh sẽ được lưu lại trên trình duyệt bằng localStorage.</p>
+    </div>
+
+    <div>
+      <p class="section-title">Nhạc nền</p>
+      <div class="controls">
+        <input id="musicUrl" class="input" placeholder="Dán link mp3 nếu muốn phát nhạc nền">
+        <div class="grid-2">
+          <button id="applyMusicBtn" class="btn btn-soft">Áp dụng nhạc</button>
+          <button id="toggleMusicBtn" class="btn btn-soft">Bật / tắt nhạc</button>
+        </div>
+      </div>
+      <p class="hint">Nếu không có link mp3 thì cứ để trống, album vẫn chạy bình thường.</p>
+    </div>
+
+    <div>
+      <p class="section-title">Ảnh hiện có</p>
+      <div id="thumbList" class="thumb-list"></div>
+    </div>
+
+    <div class="grid-2">
+      <button id="rebuildBtn" class="btn btn-primary">Tạo lại album</button>
+      <button id="clearBtn" class="btn btn-danger">Xóa tất cả</button>
+    </div>
+
+    <p class="footer-note">Mẹo: sau khi chỉnh xong, chỉ cần lưu file HTML này lên GitHub Pages là dùng được.</p>
+  </aside>
+
+  <main class="panel main">
+    <div class="topbar">
+      <div class="headline">
+        <h2>Album lật trang bản pro</h2>
+        <p>Hỗ trợ dán link ảnh, lưu local, thêm nhạc nền, không cần thư mục ảnh.</p>
+      </div>
+      <div class="nav-row">
+        <button id="prevBtn" class="btn btn-soft">← Lùi</button>
+        <button id="nextBtn" class="btn btn-primary">Tiếp →</button>
+      </div>
+    </div>
+
+    <section class="stage">
+      <div class="book-wrap">
+        <div id="book" class="book"></div>
+        <div class="nav-row">
+          <div id="statusChip" class="chip">0 ảnh</div>
+          <div id="pageChip" class="chip">Trang 0 / 0</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <audio id="sound" preload="none"></audio>
+
+  <script>
+    const STORAGE_KEY = 'memory_album_pro_v1';
+
+    const els = {
+      book: document.getElementById('book'),
+      albumTitle: document.getElementById('albumTitle'),
+      albumSubtitle: document.getElementById('albumSubtitle'),
+      endingMessage: document.getElementById('endingMessage'),
+      imageUrl: document.getElementById('imageUrl'),
+      bulkUrls: document.getElementById('bulkUrls'),
+      musicUrl: document.getElementById('musicUrl'),
+      thumbList: document.getElementById('thumbList'),
+      statusChip: document.getElementById('statusChip'),
+      pageChip: document.getElementById('pageChip'),
+      sound: document.getElementById('sound'),
+      addImageBtn: document.getElementById('addImageBtn'),
+      addSampleBtn: document.getElementById('addSampleBtn'),
+      addBulkBtn: document.getElementById('addBulkBtn'),
+      saveBtn: document.getElementById('saveBtn'),
+      rebuildBtn: document.getElementById('rebuildBtn'),
+      clearBtn: document.getElementById('clearBtn'),
+      applyMusicBtn: document.getElementById('applyMusicBtn'),
+      toggleMusicBtn: document.getElementById('toggleMusicBtn'),
+      prevBtn: document.getElementById('prevBtn'),
+      nextBtn: document.getElementById('nextBtn'),
+    };
+
+    const sampleImages = [
+      'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80'
+    ];
+
+    let state = loadState();
+    let pages = [];
+    let currentIndex = 0;
+    let endingTyped = false;
+
+    hydrateForm();
+    renderThumbs();
+    buildBook();
+    bindEvents();
+    autoRestoreMusic();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (err) {
+        console.warn('Không đọc được localStorage:', err);
+      }
+      return {
+        title: 'Memory Album',
+        subtitle: 'Reiyo Matsumoto',
+        endingMessage: 'I love three things in this world: The sun ☀️, the moon 🌕 and you ❤️.\nThe sun for the morning, the moon for the night and you, forever ❤️❤️❤️',
+        musicUrl: '',
+        images: []
+      };
+    }
+
+    function saveState(showAlert = false) {
+      state.title = els.albumTitle.value.trim() || 'Memory Album';
+      state.subtitle = els.albumSubtitle.value.trim() || 'Reiyo Matsumoto';
+      state.endingMessage = els.endingMessage.value.trim() || 'Forever ❤️';
+      state.musicUrl = els.musicUrl.value.trim();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      if (showAlert) alert('Đã lưu album trên trình duyệt.');
+    }
+
+    function hydrateForm() {
+      els.albumTitle.value = state.title || '';
+      els.albumSubtitle.value = state.subtitle || '';
+      els.endingMessage.value = state.endingMessage || '';
+      els.musicUrl.value = state.musicUrl || '';
+    }
+
+    function isValidUrl(value) {
+      try {
+        const url = new URL(value);
+        return /^https?:/.test(url.protocol);
+      } catch {
+        return false;
+      }
+    }
+
+    function addImage(url) {
+      const clean = url.trim();
+      if (!clean) return;
+      if (!isValidUrl(clean)) {
+        alert('Link ảnh chưa đúng. Hãy dán link bắt đầu bằng http hoặc https.');
+        return;
+      }
+      state.images.push(clean);
+      els.imageUrl.value = '';
+      saveState();
+      renderThumbs();
+      buildBook();
+    }
+
+    function addBulkImages(raw) {
+      const urls = raw.split('\n').map(s => s.trim()).filter(Boolean);
+      if (!urls.length) return;
+      const validUrls = urls.filter(isValidUrl);
+      if (!validUrls.length) {
+        alert('Không có link hợp lệ nào trong danh sách.');
+        return;
+      }
+      state.images.push(...validUrls);
+      els.bulkUrls.value = '';
+      saveState();
+      renderThumbs();
+      buildBook();
+    }
+
+    function removeImage(index) {
+      state.images.splice(index, 1);
+      saveState();
+      renderThumbs();
+      buildBook();
+    }
+
+    function renderThumbs() {
+      els.thumbList.innerHTML = '';
+      if (!state.images.length) {
+        els.thumbList.innerHTML = '<div class="hint" style="grid-column:1/-1">Chưa có ảnh nào. Dán link ảnh vào để bắt đầu.</div>';
+      } else {
+        state.images.forEach((src, index) => {
+          const item = document.createElement('div');
+          item.className = 'thumb';
+          item.innerHTML = `<img src="${escapeHtml(src)}" alt="thumb ${index + 1}"><button title="Xóa ảnh">×</button>`;
+          item.querySelector('button').addEventListener('click', () => removeImage(index));
+          els.thumbList.appendChild(item);
+        });
+      }
+      els.statusChip.textContent = `${state.images.length} ảnh`;
+    }
+
+    function buildBook() {
+      pages = [];
+      currentIndex = 0;
+      endingTyped = false;
+      els.book.innerHTML = '';
+
+      if (!state.images.length) {
+        els.book.innerHTML = `
+          <div class="empty-state panel" style="width:min(420px,100%);border-radius:24px;">
+            <div>
+              <div style="font-size:48px; margin-bottom:10px;">📷</div>
+              <h3 style="margin:0 0 8px; font-family:Pacifico, cursive; color:#d6739f; font-weight:400;">Album đang trống</h3>
+              <p style="margin:0; color:var(--muted); line-height:1.7;">Hãy dán link ảnh ở bên trái rồi bấm <b>Thêm ảnh</b> hoặc <b>Thêm nhiều ảnh</b>.</p>
+            </div>
+          </div>`;
+        updatePageChip();
+        return;
+      }
+
+      const intro = createPage({
+        front: `
+          <div class="cover">
+            <h3>${escapeHtml(state.title)}</h3>
+            <p>${escapeHtml(state.subtitle)}</p>
+            <p>💝 Nhấn vào trang để lật album</p>
+          </div>`,
+        back: '<div class="cover"><p>Bắt đầu hành trình kỷ niệm ✨</p></div>',
+        z: 1000
+      });
+      els.book.appendChild(intro.page);
+      pages.push(intro.page);
+
+      for (let i = 0; i < state.images.length; i += 2) {
+        const frontImage = state.images[i];
+        const backImage = state.images[i + 1];
+        const pageObj = createPage({
+          front: `<img src="${escapeHtml(frontImage)}" alt="Ảnh ${i + 1}">`,
+          back: backImage ? `<img src="${escapeHtml(backImage)}" alt="Ảnh ${i + 2}">` : '<div class="cover"><p>Trang cuối của bộ ảnh này 💗</p></div>',
+          z: 999 - i
+        });
+        els.book.appendChild(pageObj.page);
+        pages.push(pageObj.page);
+      }
+
+      const end = createPage({
+        front: `
+          <div class="ending">
+            <h3>❤️ The End ❤️</h3>
+            <div class="typing" id="endingText"></div>
+          </div>`,
+        back: '<div class="cover"><p>Cảm ơn vì đã xem hết album 🌷</p></div>',
+        z: 1
+      });
+      els.book.appendChild(end.page);
+      pages.push(end.page);
+
+      pages.forEach((page, index) => attachFlipEvents(page, index));
+      updatePageLayers();
+      updatePageChip();
+    }
+
+    function createPage({ front, back, z }) {
+      const page = document.createElement('div');
+      page.className = 'page';
+      page.style.zIndex = z;
+      page.innerHTML = `
+        <div class="page-face page-front">${front}</div>
+        <div class="page-face page-back">${back}</div>
+      `;
+      return { page };
+    }
+
+    function attachFlipEvents(page, index) {
+      const front = page.querySelector('.page-front');
+      const back = page.querySelector('.page-back');
+      front.addEventListener('click', () => flipForward(index));
+      back.addEventListener('click', () => flipBackward(index));
+
+      let startX = 0;
+      page.addEventListener('touchstart', (e) => {
+        startX = e.changedTouches[0].clientX;
+      }, { passive: true });
+      page.addEventListener('touchend', (e) => {
+        const diff = e.changedTouches[0].clientX - startX;
+        if (diff < -30) flipForward(index);
+        if (diff > 30) flipBackward(index);
+      }, { passive: true });
+    }
+
+    function flipForward(index = currentIndex) {
+      if (index >= pages.length) return;
+      const page = pages[index];
+      if (!page || page.classList.contains('flipped')) return;
+      page.classList.add('flipped');
+      currentIndex = Math.min(index + 1, pages.length);
+      updatePageLayers();
+      updatePageChip();
+      maybeTypeEnding();
+      tryAutoplayMusic();
+    }
+
+    function flipBackward(index = currentIndex - 1) {
+      if (index < 0) return;
+      const page = pages[index];
+      if (!page || !page.classList.contains('flipped')) return;
+      page.classList.remove('flipped');
+      currentIndex = index;
+      updatePageLayers();
+      updatePageChip();
+    }
+
+    function updatePageLayers() {
+      pages.forEach((page, idx) => {
+        page.style.zIndex = page.classList.contains('flipped') ? idx + 1 : 1000 - idx;
+      });
+    }
+
+    function updatePageChip() {
+      els.pageChip.textContent = `Trang ${Math.min(currentIndex + 1, pages.length)} / ${pages.length}`;
+    }
+
+    function maybeTypeEnding() {
+      if (endingTyped) return;
+      const endingIndex = pages.length - 1;
+      if (currentIndex >= endingIndex) {
+        const target = document.getElementById('endingText');
+        if (!target) return;
+        typeWriter(state.endingMessage || 'Forever ❤️', target, 26);
+        endingTyped = true;
+      }
+    }
+
+    function typeWriter(text, element, speed = 30) {
+      element.innerHTML = '';
+      let i = 0;
+      const run = () => {
+        if (i < text.length) {
+          const char = text[i];
+          element.innerHTML += char === '\n' ? '<br>' : escapeHtml(char);
+          i++;
+          setTimeout(run, speed);
+        }
+      };
+      run();
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function applyMusic() {
+      const url = els.musicUrl.value.trim();
+      state.musicUrl = url;
+      saveState();
+      if (!url) {
+        els.sound.removeAttribute('src');
+        els.sound.load();
+        return;
+      }
+      if (!isValidUrl(url)) {
+        alert('Link nhạc chưa đúng.');
+        return;
+      }
+      els.sound.src = url;
+      els.sound.loop = true;
+      els.sound.load();
+    }
+
+    function autoRestoreMusic() {
+      if (state.musicUrl && isValidUrl(state.musicUrl)) {
+        els.sound.src = state.musicUrl;
+        els.sound.loop = true;
+      }
+    }
+
+    function tryAutoplayMusic() {
+      if (!els.sound.src) return;
+      els.sound.play().catch(() => {});
+    }
+
+    function toggleMusic() {
+      if (!els.sound.src) {
+        alert('Bạn chưa thêm link nhạc mp3.');
+        return;
+      }
+      if (els.sound.paused) {
+        els.sound.play().catch(() => alert('Trình duyệt đang chặn autoplay. Hãy bấm lại sau khi đã chạm vào trang.'));
+      } else {
+        els.sound.pause();
+      }
+    }
+
+    function bindEvents() {
+      els.addImageBtn.addEventListener('click', () => addImage(els.imageUrl.value));
+      els.addBulkBtn.addEventListener('click', () => addBulkImages(els.bulkUrls.value));
+      els.addSampleBtn.addEventListener('click', () => {
+        state.images.push(...sampleImages);
+        saveState();
+        renderThumbs();
+        buildBook();
+      });
+      els.saveBtn.addEventListener('click', () => saveState(true));
+      els.rebuildBtn.addEventListener('click', () => {
+        saveState();
+        renderThumbs();
+        buildBook();
+      });
+      els.clearBtn.addEventListener('click', () => {
+        if (!confirm('Bạn chắc chắn muốn xóa toàn bộ ảnh và dữ liệu album?')) return;
+        state = {
+          title: 'Memory Album',
+          subtitle: 'Reiyo Matsumoto',
+          endingMessage: 'I love three things in this world: The sun ☀️, the moon 🌕 and you ❤️.\nThe sun for the morning, the moon for the night and you, forever ❤️❤️❤️',
+          musicUrl: '',
+          images: []
+        };
+        saveState();
+        hydrateForm();
+        renderThumbs();
+        buildBook();
+        els.sound.pause();
+        els.sound.removeAttribute('src');
+      });
+      els.applyMusicBtn.addEventListener('click', applyMusic);
+      els.toggleMusicBtn.addEventListener('click', toggleMusic);
+      els.prevBtn.addEventListener('click', () => flipBackward());
+      els.nextBtn.addEventListener('click', () => flipForward());
+
+      [els.albumTitle, els.albumSubtitle, els.endingMessage, els.musicUrl].forEach(input => {
+        input.addEventListener('change', () => saveState());
+      });
+
+      els.imageUrl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') addImage(els.imageUrl.value);
+      });
+
+      document.addEventListener('click', tryAutoplayMusic, { passive: true });
+    }
+  </script>
 </body>
 </html>
