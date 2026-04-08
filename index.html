@@ -3,58 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Memory Album Pro</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Nền tảng Bán Hàng Trực Tuyến - All In One</title>
   <style>
     :root {
-      --bg: linear-gradient(135deg, #f3ede7 0%, #efe4d8 100%);
-      --card: rgba(255,255,255,0.85);
-      --border: rgba(96, 78, 61, 0.18);
-      --text: #4c3b2f;
-      --muted: #8b7362;
-      --accent: #e88eb0;
-      --accent-2: #f5c8d8;
-      --shadow: 0 18px 50px rgba(88, 62, 44, 0.16);
-      --radius: 24px;
+      --bg: #071018;
+      --bg-soft: #0d1724;
+      --panel: rgba(13, 23, 36, 0.82);
+      --panel-2: rgba(18, 31, 48, 0.9);
+      --line: rgba(255, 255, 255, 0.08);
+      --text: #eff6ff;
+      --muted: #9db0c7;
+      --primary: #61dafb;
+      --primary-2: #7cf3c8;
+      --warning: #ffcc66;
+      --danger: #ff7f96;
+      --success: #7cf3c8;
+      --shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
     }
 
     * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      font-family: 'Poppins', sans-serif;
-      color: var(--text);
-      background: var(--bg);
-    }
-
+    html { scroll-behavior: smooth; }
     body {
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 24px;
-      padding: 24px;
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(97, 218, 251, 0.16), transparent 28%),
+        radial-gradient(circle at top right, rgba(124, 243, 200, 0.12), transparent 22%),
+        linear-gradient(180deg, #06101a 0%, #091422 44%, #060d16 100%);
+      min-height: 100vh;
     }
 
-    .panel {
-      background: var(--card);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    button, input, select { font: inherit; }
+
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, rgba(255,255,255,0.45), transparent 85%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .glass {
+      background: var(--panel);
+      border: 1px solid var(--line);
       box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      border-radius: var(--radius-xl);
     }
 
-    .sidebar {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      align-self: start;
+    .header {
       position: sticky;
-      top: 24px;
-      max-height: calc(100vh - 48px);
-      overflow: auto;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(6, 10, 18, 0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px 0;
     }
 
     .brand {
@@ -63,801 +92,1315 @@
       gap: 14px;
     }
 
-    .brand-badge {
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #f7cfe0, #f4e2c9);
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
       display: grid;
       place-items: center;
-      font-size: 24px;
-      box-shadow: inset 0 1px 1px rgba(255,255,255,0.6);
+      font-weight: 900;
+      color: #041019;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
     }
 
-    .brand h1 {
+    .brand h1, .brand p {
       margin: 0;
-      font-size: 20px;
-      line-height: 1.2;
     }
 
-    .brand p {
-      margin: 4px 0 0;
+    .brand h1 { font-size: 1rem; }
+    .brand p { color: var(--muted); font-size: 0.86rem; }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
       color: var(--muted);
-      font-size: 13px;
     }
 
-    .section-title {
-      margin: 0 0 10px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--muted);
+    .nav-links a:hover { color: var(--text); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      padding: 52px 0 28px;
+      align-items: stretch;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 14px;
+      color: var(--primary-2);
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: .08em;
     }
 
-    .input, .textarea {
-      width: 100%;
-      border: 1px solid rgba(96, 78, 61, 0.14);
-      background: rgba(255,255,255,0.9);
-      border-radius: 16px;
-      padding: 12px 14px;
-      font: inherit;
-      color: var(--text);
-      outline: none;
-      transition: .2s ease;
+    .hero h2 {
+      margin: 0;
+      font-size: clamp(2.1rem, 5vw, 4.2rem);
+      line-height: 1.04;
+      max-width: 12ch;
     }
 
-    .input:focus, .textarea:focus {
-      border-color: rgba(232, 142, 176, 0.7);
-      box-shadow: 0 0 0 4px rgba(232, 142, 176, 0.12);
+    .hero p {
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 1.04rem;
+      margin: 18px 0 26px;
+      max-width: 66ch;
     }
 
-    .textarea {
-      min-height: 110px;
-      resize: vertical;
-      line-height: 1.6;
-    }
-
-    .controls {
-      display: grid;
-      gap: 10px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    .actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
     }
 
     .btn {
-      border: none;
+      border: 0;
       border-radius: 16px;
-      padding: 12px 14px;
-      font: inherit;
-      font-weight: 600;
+      padding: 14px 18px;
       cursor: pointer;
-      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+      transition: transform .2s ease, opacity .2s ease;
+      font-weight: 800;
     }
 
-    .btn:hover { transform: translateY(-1px); }
-    .btn:active { transform: translateY(0); }
-
+    .btn:hover { transform: translateY(-2px); }
     .btn-primary {
-      background: linear-gradient(135deg, #eb93b5, #d886ad);
-      color: white;
-      box-shadow: 0 12px 24px rgba(216, 134, 173, 0.28);
+      color: #041019;
+      background: linear-gradient(135deg, var(--primary), #a9f1ff);
+      box-shadow: 0 14px 30px rgba(97, 218, 251, 0.22);
     }
-
-    .btn-soft {
-      background: rgba(255,255,255,0.9);
+    .btn-secondary {
       color: var(--text);
-      border: 1px solid rgba(96, 78, 61, 0.12);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    .btn-danger {
-      background: #fff1f4;
-      color: #cb5578;
-      border: 1px solid #f3bfd0;
-    }
-
-    .hint {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .thumb-list {
+    .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
     }
 
-    .thumb {
-      position: relative;
-      aspect-ratio: 1 / 1;
-      border-radius: 14px;
-      overflow: hidden;
-      background: #f7f0ea;
-      border: 1px solid rgba(96, 78, 61, 0.12);
+    .kpi-card, .card, .stat-card, .wire-box, .table-wrap, .timeline-item {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.035);
+      border-radius: var(--radius-lg);
+      padding: 18px;
     }
 
-    .thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .kpi-card span, .stat-card span, .phase, .small-label {
+      color: var(--muted);
+      font-size: 0.85rem;
       display: block;
     }
 
-    .thumb button {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      width: 24px;
-      height: 24px;
-      border: none;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.58);
-      color: #fff;
-      cursor: pointer;
-      font-size: 14px;
+    .kpi-card strong, .stat-card strong {
+      margin-top: 8px;
+      display: block;
+      font-size: 1.28rem;
     }
 
-    .main {
-      min-width: 0;
-      padding: 20px;
+    .hero-side {
+      padding: 22px;
+    }
+
+    .panel-title {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 6px rgba(124, 243, 200, 0.12);
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .simulation {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px dashed rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.18);
+    }
+
+    .sim-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+    }
+
+    .sim-row strong { color: var(--text); }
+    .sim-row:last-child { border-bottom: none; }
+
+    section.section { padding: 28px 0; }
+    .section-head { margin-bottom: 18px; }
+    .section-head h3 {
+      margin: 0;
+      font-size: clamp(1.5rem, 3vw, 2.4rem);
+    }
+
+    .section-head p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 10px 0 0;
+      max-width: 76ch;
+    }
+
+    .cards-3, .cards-4, .cards-2 {
+      display: grid;
       gap: 18px;
     }
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
+    .cards-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .cards-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .cards-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+
+    .card h4 {
+      margin: 0 0 10px;
+      font-size: 1.03rem;
     }
 
-    .headline h2 {
-      margin: 0;
-      font-size: clamp(24px, 3vw, 34px);
-      font-family: 'Pacifico', cursive;
-      font-weight: 400;
-      color: #d6739f;
-    }
-
-    .headline p {
-      margin: 6px 0 0;
+    .card p, .card li {
       color: var(--muted);
+      line-height: 1.72;
     }
 
-    .stage {
-      min-height: 76vh;
+    .card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .architecture {
       display: grid;
-      place-items: center;
-      padding: 18px;
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.85), rgba(255,255,255,0.3) 35%, transparent 36%),
-        linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
-      border: 1px solid rgba(255,255,255,0.45);
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 14px;
+      padding: 20px;
     }
 
-    .book-wrap {
+    .arch-col {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .arch-col h4 { margin: 0 0 12px; }
+
+    .arch-item {
+      padding: 12px 14px;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      background: rgba(0,0,0,0.16);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .journey {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px;
+    }
+
+    .journey-flow {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      width: 100%;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
     }
 
-    .book {
+    .journey-flow span {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(97,218,251,0.24);
+      background: rgba(97,218,251,0.1);
+      font-size: 0.92rem;
+      color: #dffbff;
+    }
+
+    .feature-board {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    .wireframe-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .wire-box {
+      min-height: 155px;
       position: relative;
-      width: min(360px, 82vw);
-      aspect-ratio: 3 / 4;
-      perspective: 2400px;
-      filter: drop-shadow(0 26px 36px rgba(72, 50, 40, 0.18));
+      overflow: hidden;
     }
 
-    .page {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      transform-style: preserve-3d;
-      transform-origin: left center;
-      transition: transform 1s ease, box-shadow .3s ease;
-      border-radius: 24px;
-      cursor: pointer;
-    }
-
-    .page.flipped { transform: rotateY(-180deg); }
-
-    .page-face {
+    .wire-box::before {
+      content: "";
       position: absolute;
       inset: 0;
-      backface-visibility: hidden;
-      border-radius: 24px;
-      overflow: hidden;
-      background: #fff;
-      border: 1px solid rgba(96, 78, 61, 0.12);
-      box-shadow: 0 10px 26px rgba(69, 45, 36, 0.1);
+      background: linear-gradient(135deg, rgba(97,218,251,0.08), transparent 55%);
+      pointer-events: none;
     }
 
-    .page-front,
-    .page-back {
+    .wire-header, .wire-line, .wire-chip, .wire-button {
+      border-radius: 10px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .wire-header { height: 16px; width: 54%; margin-bottom: 14px; }
+    .wire-line { height: 12px; margin-bottom: 10px; }
+    .wire-line.short { width: 60%; }
+    .wire-chip { display: inline-block; width: 82px; height: 30px; margin: 6px 6px 0 0; }
+    .wire-button { width: 120px; height: 40px; margin-top: 14px; }
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 18px;
+    }
+
+    .filters .filter-group {
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .filters h5 {
+      margin: 0 0 10px;
+      font-size: .96rem;
+    }
+
+    .chip-row {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px;
-    }
-
-    .page-back { transform: rotateY(180deg); }
-
-    .page-face img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 18px;
-      display: block;
-      background: #f3ede7;
-    }
-
-    .cover,
-    .ending {
-      width: 100%;
-      height: 100%;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 22px;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.95), rgba(248,237,242,0.95)),
-        linear-gradient(135deg, #f6d8e6, #f6ead9);
-      border: 1px solid rgba(214, 166, 190, 0.25);
-    }
-
-    .cover h3,
-    .ending h3 {
-      margin: 0;
-      font-size: clamp(28px, 5vw, 34px);
-      font-family: 'Pacifico', cursive;
-      font-weight: 400;
-      color: #da6c9a;
-    }
-
-    .cover p,
-    .ending p,
-    .ending .typing {
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 14px;
-    }
-
-    .nav-row {
-      display: flex;
-      gap: 10px;
       flex-wrap: wrap;
-      justify-content: center;
+      gap: 8px;
     }
 
     .chip {
-      padding: 10px 14px;
+      padding: 8px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.82);
-      border: 1px solid rgba(96, 78, 61, 0.12);
-      font-size: 13px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
       color: var(--muted);
+      font-size: .9rem;
     }
 
-    .empty-state {
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .product-card {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .product-thumb {
+      aspect-ratio: 1 / 1;
+      background:
+        linear-gradient(135deg, rgba(97,218,251,0.18), rgba(124,243,200,0.08)),
+        radial-gradient(circle at top right, rgba(255,255,255,0.12), transparent 30%),
+        #0f1928;
       display: grid;
       place-items: center;
-      text-align: center;
-      padding: 30px;
-      color: var(--muted);
-      min-height: 420px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.75);
+      font-size: 1.05rem;
     }
 
-    .footer-note {
-      font-size: 12px;
+    .product-body {
+      padding: 14px;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .price { font-weight: 800; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: .82rem;
+      color: #defcff;
+      background: rgba(97,218,251,0.12);
+      border: 1px solid rgba(97,218,251,0.2);
+    }
+
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+    }
+
+    .stepper {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .step {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      font-size: .92rem;
+    }
+
+    .step.active {
+      color: #041019;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      border-color: transparent;
+      font-weight: 800;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .field input, .field select {
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      padding: 0 14px;
+      outline: none;
+    }
+
+    .summary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 14px 0 18px;
+    }
+
+    .summary-item, .order-step {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+    }
+
+    .summary-item strong, .order-step strong { color: var(--text); }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 14px;
+    }
+
+    .phase {
+      margin-bottom: 10px;
+      color: var(--primary-2);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 800;
+    }
+
+    .analytics-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .chart {
+      height: 240px;
+      display: flex;
+      align-items: end;
+      gap: 14px;
+      padding-top: 22px;
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 16px 16px 6px 6px;
+      background: linear-gradient(180deg, var(--primary-2), var(--primary));
+      position: relative;
+      min-height: 16px;
+      transition: height .35s ease;
+    }
+
+    .bar::after {
+      content: attr(data-value);
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: .82rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .chart-legend {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .table-wrap {
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+      color: var(--muted);
+      vertical-align: top;
+    }
+
+    th { color: var(--text); font-size: .95rem; }
+
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .stack span {
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(124,243,200,0.1);
+      color: #ddfff6;
+      border: 1px solid rgba(124,243,200,0.18);
+      font-size: .88rem;
+    }
+
+    .footer {
+      padding: 24px 0 42px;
       color: var(--muted);
       text-align: center;
     }
 
-    @media (max-width: 1024px) {
-      body {
+    @media (max-width: 1100px) {
+      .hero,
+      .feature-board,
+      .checkout-layout,
+      .analytics-wrap,
+      .journey,
+      .catalog-grid,
+      .cards-4,
+      .cards-3,
+      .timeline,
+      .architecture,
+      .product-grid,
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav { display: block; }
+      .nav-links { margin-top: 12px; }
+      .hero,
+      .feature-board,
+      .checkout-layout,
+      .analytics-wrap,
+      .journey,
+      .catalog-grid,
+      .cards-4,
+      .cards-3,
+      .cards-2,
+      .timeline,
+      .architecture,
+      .product-grid,
+      .kpi-grid,
+      .stat-grid,
+      .wireframe-grid,
+      .form-grid {
         grid-template-columns: 1fr;
       }
 
-      .sidebar {
-        position: static;
-        max-height: none;
-      }
-    }
-
-    @media (max-width: 640px) {
-      body { padding: 12px; }
-      .sidebar, .main { padding: 14px; }
-      .grid-2 { grid-template-columns: 1fr; }
-      .thumb-list { grid-template-columns: repeat(4, 1fr); }
-      .book { width: min(320px, 92vw); }
+      .hero h2 { max-width: 100%; }
+      .container { width: min(100% - 20px, 1240px); }
     }
   </style>
 </head>
 <body>
-  <aside class="panel sidebar">
-    <div class="brand">
-      <div class="brand-badge">💖</div>
+  <div class="grid-bg"></div>
+
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-mark">EC</div>
+        <div>
+          <h1>Ecommerce Platform</h1>
+          <p>All-in-one single file prototype</p>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#overview">Tổng quan</a>
+        <a href="#journey">Journey</a>
+        <a href="#frontend">Frontend</a>
+        <a href="#backend">Backend</a>
+        <a href="#analytics">Analytics</a>
+        <a href="#deliverables">Deliverables</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" id="overview">
       <div>
-        <h1>Memory Album Pro</h1>
-        <p>Không cần up thư mục ảnh, chỉ cần dán link.</p>
-      </div>
-    </div>
+        <span class="eyebrow">Thiết kế & triển khai nền tảng bán hàng trực tuyến</span>
+        <h2>Nền tảng ecommerce đầy đủ catalog, cart, checkout, admin, báo cáo và tích hợp hệ sinh thái.</h2>
+        <p>
+          Bản demo một file này mô phỏng định hướng sản phẩm và kỹ thuật cho một nền tảng bán hàng trực tuyến
+          mobile-first, SEO-friendly, hỗ trợ đa ngôn ngữ, đa tiền tệ, CRM, kho, vận chuyển và ví/PG. Trọng tâm là
+          hiệu năng dưới <strong>200ms</strong> ở trang danh mục, tối ưu chuyển đổi bằng <strong>A/B testing</strong>,
+          và chuẩn vận hành đơn hàng <strong>4 bước: tạo → xác nhận → giao → hoàn thành</strong>.
+        </p>
 
-    <div>
-      <p class="section-title">Thông tin album</p>
-      <div class="controls">
-        <input id="albumTitle" class="input" value="Memory Album" placeholder="Tên album">
-        <input id="albumSubtitle" class="input" value="Reiyo Matsumoto" placeholder="Dòng phụ đề / tên người nhận">
-        <textarea id="endingMessage" class="textarea" placeholder="Lời nhắn cuối album">I love three things in this world: The sun ☀️, the moon 🌕 and you ❤️.
-The sun for the morning, the moon for the night and you, forever ❤️❤️❤️</textarea>
-      </div>
-    </div>
-
-    <div>
-      <p class="section-title">Thêm ảnh bằng link</p>
-      <div class="controls">
-        <input id="imageUrl" class="input" placeholder="Dán link ảnh trực tiếp rồi bấm Thêm ảnh">
-        <div class="grid-2">
-          <button id="addImageBtn" class="btn btn-primary">Thêm ảnh</button>
-          <button id="addSampleBtn" class="btn btn-soft">Thêm ảnh mẫu</button>
+        <div class="actions">
+          <button class="btn btn-primary" id="toggleModeBtn">Chuyển B2C / Marketplace</button>
+          <button class="btn btn-secondary" id="simulateBtn">Mô phỏng traffic</button>
         </div>
-        <textarea id="bulkUrls" class="textarea" placeholder="Dán nhiều link, mỗi dòng 1 link"></textarea>
-        <div class="grid-2">
-          <button id="addBulkBtn" class="btn btn-soft">Thêm nhiều ảnh</button>
-          <button id="saveBtn" class="btn btn-soft">Lưu trình duyệt</button>
-        </div>
-      </div>
-      <p class="hint">Nên dùng link ảnh trực tiếp dạng .jpg, .png, .webp. Ảnh sẽ được lưu lại trên trình duyệt bằng localStorage.</p>
-    </div>
 
-    <div>
-      <p class="section-title">Nhạc nền</p>
-      <div class="controls">
-        <input id="musicUrl" class="input" placeholder="Dán link mp3 nếu muốn phát nhạc nền">
-        <div class="grid-2">
-          <button id="applyMusicBtn" class="btn btn-soft">Áp dụng nhạc</button>
-          <button id="toggleMusicBtn" class="btn btn-soft">Bật / tắt nhạc</button>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span>Danh mục response time</span>
+            <strong id="catalogLatency">&lt; 200ms</strong>
+          </div>
+          <div class="kpi-card">
+            <span>CR mục tiêu</span>
+            <strong id="conversionRate">3.8%</strong>
+          </div>
+          <div class="kpi-card">
+            <span>AOV mục tiêu</span>
+            <strong id="aovTarget">₫780K</strong>
+          </div>
+          <div class="kpi-card">
+            <span>Hỗ trợ</span>
+            <strong id="platformScope">Multi-language / Multi-currency</strong>
+          </div>
         </div>
       </div>
-      <p class="hint">Nếu không có link mp3 thì cứ để trống, album vẫn chạy bình thường.</p>
-    </div>
 
-    <div>
-      <p class="section-title">Ảnh hiện có</p>
-      <div id="thumbList" class="thumb-list"></div>
-    </div>
-
-    <div class="grid-2">
-      <button id="rebuildBtn" class="btn btn-primary">Tạo lại album</button>
-      <button id="clearBtn" class="btn btn-danger">Xóa tất cả</button>
-    </div>
-
-    <p class="footer-note">Mẹo: sau khi chỉnh xong, chỉ cần lưu file HTML này lên GitHub Pages là dùng được.</p>
-  </aside>
-
-  <main class="panel main">
-    <div class="topbar">
-      <div class="headline">
-        <h2>Album lật trang bản pro</h2>
-        <p>Hỗ trợ dán link ảnh, lưu local, thêm nhạc nền, không cần thư mục ảnh.</p>
-      </div>
-      <div class="nav-row">
-        <button id="prevBtn" class="btn btn-soft">← Lùi</button>
-        <button id="nextBtn" class="btn btn-primary">Tiếp →</button>
-      </div>
-    </div>
-
-    <section class="stage">
-      <div class="book-wrap">
-        <div id="book" class="book"></div>
-        <div class="nav-row">
-          <div id="statusChip" class="chip">0 ảnh</div>
-          <div id="pageChip" class="chip">Trang 0 / 0</div>
+      <aside class="glass hero-side">
+        <div class="panel-title">
+          <span class="dot"></span>
+          <span>Commerce Control Center</span>
         </div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <span>Triển khai</span>
+            <strong id="deployModel">B2C Direct</strong>
+          </div>
+          <div class="stat-card">
+            <span>Frontend</span>
+            <strong id="frontendModel">Next.js SSR</strong>
+          </div>
+          <div class="stat-card">
+            <span>Backend</span>
+            <strong id="backendModel">Modular Monolith</strong>
+          </div>
+          <div class="stat-card">
+            <span>Thanh toán</span>
+            <strong id="paymentModel">PG + Wallet</strong>
+          </div>
+        </div>
+
+        <div class="simulation">
+          <div class="sim-row"><span>Visitors online</span><strong id="visitorsOnline">18,240</strong></div>
+          <div class="sim-row"><span>Active carts</span><strong id="activeCarts">1,482</strong></div>
+          <div class="sim-row"><span>Checkout success</span><strong id="checkoutSuccess">72.4%</strong></div>
+          <div class="sim-row"><span>Open orders</span><strong id="openOrders">684</strong></div>
+          <div class="sim-row"><span>Search cache hit</span><strong id="cacheHit">93.1%</strong></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="research">
+      <div class="section-head">
+        <span class="eyebrow">Nghiên cứu & lập kế hoạch</span>
+        <h3>Định vị cạnh tranh, hành trình khách hàng và KPI cốt lõi</h3>
+      </div>
+
+      <div class="cards-3">
+        <article class="card">
+          <h4>3 nhóm đối thủ chính</h4>
+          <ul>
+            <li>Sàn lớn có logistics mạnh và giá cạnh tranh.</li>
+            <li>Brand D2C tối ưu trải nghiệm, nội dung và loyalty.</li>
+            <li>Nền tảng headless commerce cho doanh nghiệp scale nhanh.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h4>KPI cần theo dõi</h4>
+          <ul>
+            <li><strong>CR</strong> — Conversion Rate theo source/device.</li>
+            <li><strong>AOV</strong> — Average Order Value theo campaign.</li>
+            <li><strong>LTV</strong> — Lifetime Value theo cohort.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h4>Pháp lý & vận hành</h4>
+          <ul>
+            <li>Thuế, hoá đơn, hoàn trả, lưu trữ dữ liệu giao dịch.</li>
+            <li>Chính sách đổi trả minh bạch và SLA giao hàng.</li>
+            <li>Kiểm soát dữ liệu cá nhân theo GDPR / luật địa phương.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="journey">
+      <div class="section-head">
+        <span class="eyebrow">User journey</span>
+        <h3>Hành trình mua hàng cho guest và logged-in</h3>
+      </div>
+
+      <div class="journey">
+        <article class="card">
+          <h4>Guest Journey</h4>
+          <p>Khách truy cập cần vào nhanh, tìm nhanh, checkout ngắn, ít cản trở đăng ký.</p>
+          <div class="journey-flow">
+            <span>Landing</span>
+            <span>Catalog</span>
+            <span>PDP</span>
+            <span>Cart</span>
+            <span>Checkout</span>
+            <span>Payment</span>
+            <span>Order Success</span>
+          </div>
+        </article>
+        <article class="card">
+          <h4>Logged-in Journey</h4>
+          <p>Người dùng đăng nhập cần cá nhân hoá, wishlist, địa chỉ lưu sẵn, đơn hàng và loyalty.</p>
+          <div class="journey-flow">
+            <span>Home Personalized</span>
+            <span>Search</span>
+            <span>Variant Select</span>
+            <span>Wishlist</span>
+            <span>Checkout 1-click</span>
+            <span>Track Order</span>
+            <span>Repeat Purchase</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="frontend">
+      <div class="section-head">
+        <span class="eyebrow">Frontend</span>
+        <h3>Mobile-first, component-driven, SSR/SSG và chuẩn accessibility</h3>
+        <p>
+          Khuyến nghị dùng React + Next.js cho SSR/SEO, atomic design cho component library, lazy load hình ảnh,
+          semantic HTML, keyboard navigation, contrast và focus states đạt WCAG AA.
+        </p>
+      </div>
+
+      <div class="feature-board">
+        <article class="card">
+          <h4>Wireframes / Component Library</h4>
+          <div class="wireframe-grid">
+            <div class="wire-box">
+              <div class="small-label">Product Listing</div>
+              <div class="wire-header"></div>
+              <div class="wire-line"></div>
+              <div class="wire-line short"></div>
+              <span class="wire-chip"></span><span class="wire-chip"></span><span class="wire-chip"></span>
+              <div class="wire-button"></div>
+            </div>
+            <div class="wire-box">
+              <div class="small-label">Product Detail</div>
+              <div class="wire-header"></div>
+              <div class="wire-line"></div>
+              <div class="wire-line"></div>
+              <div class="wire-line short"></div>
+              <div class="wire-button"></div>
+            </div>
+            <div class="wire-box">
+              <div class="small-label">Checkout Multi-step</div>
+              <div class="wire-header"></div>
+              <div class="wire-line"></div>
+              <div class="wire-line short"></div>
+              <span class="wire-chip"></span><span class="wire-chip"></span>
+              <div class="wire-button"></div>
+            </div>
+            <div class="wire-box">
+              <div class="small-label">Customer Account</div>
+              <div class="wire-header"></div>
+              <div class="wire-line"></div>
+              <div class="wire-line"></div>
+              <span class="wire-chip"></span><span class="wire-chip"></span><span class="wire-chip"></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h4>Atomic design stack</h4>
+          <div class="stack">
+            <span>Atoms</span>
+            <span>Buttons</span>
+            <span>Inputs</span>
+            <span>Tags</span>
+            <span>Molecules</span>
+            <span>Cards</span>
+            <span>Filters</span>
+            <span>Mini Cart</span>
+            <span>Organisms</span>
+            <span>Header</span>
+            <span>PDP</span>
+            <span>Checkout</span>
+            <span>Templates</span>
+            <span>Pages</span>
+          </div>
+          <p>
+            Các màn cần có: product listing, PDP variant/gallery/zoom, cart, checkout nhiều bước, account,
+            notifications web + email, wishlist, review và dynamic promotion blocks.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">Catalog & checkout demo</span>
+        <h3>Mô phỏng trải nghiệm người dùng ở trang danh mục và thanh toán</h3>
+      </div>
+
+      <div class="catalog-grid">
+        <aside class="card filters">
+          <h4>Filters / Sort</h4>
+          <div class="filter-group">
+            <h5>Danh mục</h5>
+            <div class="chip-row">
+              <span class="chip">Áo</span>
+              <span class="chip">Quần</span>
+              <span class="chip">Giày</span>
+              <span class="chip">Phụ kiện</span>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h5>Giá</h5>
+            <div class="chip-row">
+              <span class="chip">&lt; 300K</span>
+              <span class="chip">300K - 700K</span>
+              <span class="chip">700K+</span>
+            </div>
+          </div>
+          <div class="filter-group">
+            <h5>Sort</h5>
+            <div class="chip-row">
+              <span class="chip">Mới nhất</span>
+              <span class="chip">Bán chạy</span>
+              <span class="chip">Giá tăng</span>
+            </div>
+          </div>
+          <p>Danh mục cần cache nóng, index search, lazy load ảnh và SEO metadata server-side.</p>
+        </aside>
+
+        <div class="product-grid">
+          <article class="product-card">
+            <div class="product-thumb">Product 01</div>
+            <div class="product-body">
+              <div class="badge">Best Seller</div>
+              <h4>Áo khoác Urban Tech</h4>
+              <p>Màu / Size / Variant / Review / Promotion</p>
+              <div class="price-row"><span class="price">₫690.000</span><button class="btn btn-secondary">Add cart</button></div>
+            </div>
+          </article>
+          <article class="product-card">
+            <div class="product-thumb">Product 02</div>
+            <div class="product-body">
+              <div class="badge">New Arrival</div>
+              <h4>Giày Street Motion</h4>
+              <p>Gallery / Zoom / Stock / Delivery ETA</p>
+              <div class="price-row"><span class="price">₫1.290.000</span><button class="btn btn-secondary">Wishlist</button></div>
+            </div>
+          </article>
+          <article class="product-card">
+            <div class="product-thumb">Product 03</div>
+            <div class="product-body">
+              <div class="badge">Promo -15%</div>
+              <h4>Túi Everyday Carry</h4>
+              <p>Dynamic pricing / Bundles / Review snippet</p>
+              <div class="price-row"><span class="price">₫540.000</span><button class="btn btn-secondary">View</button></div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="checkout-layout" style="margin-top:18px;">
+        <article class="card">
+          <h4>Checkout nhiều bước</h4>
+          <div class="stepper">
+            <span class="step active">1. Thông tin</span>
+            <span class="step">2. Giao hàng</span>
+            <span class="step">3. Thanh toán</span>
+            <span class="step">4. Xác nhận</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="field"><label>Họ và tên</label><input value="Nguyễn Văn A" /></div>
+            <div class="field"><label>Số điện thoại</label><input value="0901 234 567" /></div>
+            <div class="field"><label>Email</label><input value="customer@email.com" /></div>
+            <div class="field"><label>Quốc gia</label><select><option>Việt Nam</option></select></div>
+            <div class="field" style="grid-column:1/-1;"><label>Địa chỉ nhận hàng</label><input value="123 Nguyễn Huệ, Quận 1, TP.HCM" /></div>
+          </div>
+        </article>
+
+        <aside class="card">
+          <h4>Order summary</h4>
+          <div class="summary-list">
+            <div class="summary-item"><span>Tạm tính</span><strong>₫1.980.000</strong></div>
+            <div class="summary-item"><span>Giảm giá</span><strong>-₫120.000</strong></div>
+            <div class="summary-item"><span>Vận chuyển</span><strong>₫30.000</strong></div>
+            <div class="summary-item"><span>Tổng thanh toán</span><strong>₫1.890.000</strong></div>
+          </div>
+          <div class="stack">
+            <span>Visa/Mastercard</span>
+            <span>MoMo</span>
+            <span>ZaloPay</span>
+            <span>VNPay</span>
+            <span>COD</span>
+            <span>Wallet</span>
+          </div>
+          <button class="btn btn-primary" style="width:100%; margin-top:18px;">Tiếp tục thanh toán</button>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="backend">
+      <div class="section-head">
+        <span class="eyebrow">Backend</span>
+        <h3>Kiến trúc modular monolith hoặc microservices, mở rộng an toàn</h3>
+      </div>
+
+      <div class="glass architecture">
+        <div class="arch-col">
+          <h4>Experience Layer</h4>
+          <div class="arch-item">Next.js / Nuxt SSR</div>
+          <div class="arch-item">BFF / API Gateway</div>
+          <div class="arch-item">REST / GraphQL versioned</div>
+          <div class="arch-item">SEO metadata / localization</div>
+        </div>
+        <div class="arch-col">
+          <h4>Core Services</h4>
+          <div class="arch-item">Catalog</div>
+          <div class="arch-item">Cart</div>
+          <div class="arch-item">Orders</div>
+          <div class="arch-item">Payments / Auth</div>
+        </div>
+        <div class="arch-col">
+          <h4>Supporting Services</h4>
+          <div class="arch-item">Inventory</div>
+          <div class="arch-item">Notifications</div>
+          <div class="arch-item">Reporting</div>
+          <div class="arch-item">CRM / Shipping / Wallet webhooks</div>
+        </div>
+        <div class="arch-col">
+          <h4>Data Layer</h4>
+          <div class="arch-item">Postgres</div>
+          <div class="arch-item">Elasticsearch</div>
+          <div class="arch-item">Redis</div>
+          <div class="arch-item">CDC / ETL / backup policy</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">Data model</span>
+        <h3>ER scope và 4 bước quản lý đơn hàng chuẩn</h3>
+      </div>
+
+      <div class="cards-2">
+        <article class="card">
+          <h4>Thực thể dữ liệu chính</h4>
+          <div class="stack">
+            <span>Product</span>
+            <span>Variant</span>
+            <span>Inventory</span>
+            <span>Price</span>
+            <span>Cart</span>
+            <span>Order</span>
+            <span>Order Item</span>
+            <span>Transaction</span>
+            <span>Shipment</span>
+            <span>Address</span>
+            <span>Customer</span>
+            <span>Review</span>
+          </div>
+          <p>
+            Import catalog nên chạy ETL hàng loạt; đồng bộ kho có thể dùng CDC hoặc event sourcing cho thay đổi tồn và đơn.
+          </p>
+        </article>
+        <article class="card">
+          <h4>Order lifecycle</h4>
+          <div class="summary-list">
+            <div class="order-step"><span>1. Tạo đơn</span><strong>Cart → Order Draft</strong></div>
+            <div class="order-step"><span>2. Xác nhận</span><strong>Payment auth / inventory reserve</strong></div>
+            <div class="order-step"><span>3. Giao hàng</span><strong>Shipment create / tracking update</strong></div>
+            <div class="order-step"><span>4. Hoàn thành</span><strong>Delivered / settlement / review trigger</strong></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="analytics">
+      <div class="section-head">
+        <span class="eyebrow">Analytics & optimization</span>
+        <h3>A/B testing, funnel analysis và báo cáo tăng chuyển đổi</h3>
+      </div>
+
+      <div class="analytics-wrap">
+        <article class="card">
+          <h4>Funnel / Monetization</h4>
+          <div class="chart" id="funnelChart"></div>
+          <div class="chart-legend">
+            <span>Visit</span>
+            <span>PDP</span>
+            <span>Add Cart</span>
+            <span>Purchase</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h4>Events cần tracking</h4>
+          <div class="stack">
+            <span>page_view</span>
+            <span>search_submit</span>
+            <span>filter_apply</span>
+            <span>product_view</span>
+            <span>variant_select</span>
+            <span>add_to_cart</span>
+            <span>checkout_start</span>
+            <span>payment_success</span>
+            <span>refund_request</span>
+            <span>promo_apply</span>
+            <span>wishlist_add</span>
+            <span>review_submit</span>
+          </div>
+          <p>
+            Chạy cohort, funnel, experiment pricing, CTA, shipping incentive và layout mobile để tối ưu CR/AOV/LTV.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">Security & compliance</span>
+        <h3>PCI-DSS, rate limiting, CSP, TLS và chính sách dữ liệu</h3>
+      </div>
+
+      <div class="cards-4">
+        <article class="card">
+          <h4>Application Security</h4>
+          <p>Input validation, sanitization, CSRF/XSS protection, CSP, helmet headers, WAF, secret rotation.</p>
+        </article>
+        <article class="card">
+          <h4>Payments</h4>
+          <p>PCI-DSS boundary rõ ràng, tokenization, webhook verification, idempotency key cho thanh toán.</p>
+        </article>
+        <article class="card">
+          <h4>Identity</h4>
+          <p>OAuth2 + JWT + refresh token, MFA cho admin, session hardening, audit trail.</p>
+        </article>
+        <article class="card">
+          <h4>Data Governance</h4>
+          <p>GDPR/local compliance, retention policy, encryption at rest/in transit, backup drill định kỳ.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">DevOps / QA</span>
+        <h3>Triển khai, quan sát hệ thống và kiểm thử nghiệm thu</h3>
+      </div>
+
+      <div class="cards-2">
+        <article class="card">
+          <h4>CI/CD & vận hành</h4>
+          <p>Docker + Kubernetes, autoscaling, blue/green hoặc canary, Prometheus + Grafana, alerting theo SLO/SLI.</p>
+          <div class="stack">
+            <span>Tests</span>
+            <span>Staging</span>
+            <span>Production</span>
+            <span>Canary</span>
+            <span>Rollback</span>
+            <span>Runbook</span>
+          </div>
+        </article>
+        <article class="card">
+          <h4>Testing & nghiệm thu</h4>
+          <p>Unit, integration, E2E, load tests 1000 concurrent, security scan, accessibility audit và disaster recovery test.</p>
+          <div class="stack">
+            <span>Unit</span>
+            <span>Integration</span>
+            <span>E2E</span>
+            <span>Load</span>
+            <span>Security</span>
+            <span>A11y</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="deliverables">
+      <div class="section-head">
+        <span class="eyebrow">Kết quả giao hàng</span>
+        <h3>Roadmap deliverables từ PRD đến deployed demo</h3>
+      </div>
+
+      <div class="timeline">
+        <article class="timeline-item">
+          <span class="phase">Phase 01</span>
+          <h4>PRD + nghiên cứu</h4>
+          <p>PRD, competitor snapshot, user journey, KPI framework, risk & compliance checklist.</p>
+        </article>
+        <article class="timeline-item">
+          <span class="phase">Phase 02</span>
+          <h4>UX/UI + component library</h4>
+          <p>Wireframes, design tokens, atomic components, responsive templates và accessibility baseline.</p>
+        </article>
+        <article class="timeline-item">
+          <span class="phase">Phase 03</span>
+          <h4>API + DB + pipeline</h4>
+          <p>OpenAPI, DB schema, auth flow, webhooks, ETL import, observability và CI pipeline.</p>
+        </article>
+        <article class="timeline-item">
+          <span class="phase">Phase 04</span>
+          <h4>Demo + runbook</h4>
+          <p>Deployed demo, load test summary, admin/reporting mock, runbook vận hành và handoff.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span class="eyebrow">API / Database sample</span>
+        <h3>Bảng tóm tắt đặc tả kỹ thuật cần bàn giao</h3>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Hạng mục</th>
+              <th>Nội dung</th>
+              <th>Khuyến nghị</th>
+              <th>Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>API Spec</td>
+              <td>Catalog, Cart, Orders, Payments, Auth, Inventory, Notifications</td>
+              <td>REST + OpenAPI hoặc GraphQL BFF</td>
+              <td>Versioned spec + webhook contracts</td>
+            </tr>
+            <tr>
+              <td>Database</td>
+              <td>Product, Variant, Price, Cart, Order, Transaction, Shipment</td>
+              <td>Postgres + Redis + Elasticsearch</td>
+              <td>Schema + indexing strategy</td>
+            </tr>
+            <tr>
+              <td>Security</td>
+              <td>Auth, payment, data retention, WAF, CSP, TLS 1.3</td>
+              <td>Zero-trust service auth + audit log</td>
+              <td>Threat model + controls checklist</td>
+            </tr>
+            <tr>
+              <td>Operations</td>
+              <td>Build, deploy, monitor, alert, rollback</td>
+              <td>K8s + Prometheus + Grafana</td>
+              <td>CI pipeline + runbook + SLOs</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
   </main>
 
-  <audio id="sound" preload="none"></audio>
+  <footer class="footer container">
+    Một file HTML duy nhất — gộp sẵn HTML + CSS + JS cho prototype nền tảng ecommerce.
+  </footer>
 
   <script>
-    const STORAGE_KEY = 'memory_album_pro_v1';
-
-    const els = {
-      book: document.getElementById('book'),
-      albumTitle: document.getElementById('albumTitle'),
-      albumSubtitle: document.getElementById('albumSubtitle'),
-      endingMessage: document.getElementById('endingMessage'),
-      imageUrl: document.getElementById('imageUrl'),
-      bulkUrls: document.getElementById('bulkUrls'),
-      musicUrl: document.getElementById('musicUrl'),
-      thumbList: document.getElementById('thumbList'),
-      statusChip: document.getElementById('statusChip'),
-      pageChip: document.getElementById('pageChip'),
-      sound: document.getElementById('sound'),
-      addImageBtn: document.getElementById('addImageBtn'),
-      addSampleBtn: document.getElementById('addSampleBtn'),
-      addBulkBtn: document.getElementById('addBulkBtn'),
-      saveBtn: document.getElementById('saveBtn'),
-      rebuildBtn: document.getElementById('rebuildBtn'),
-      clearBtn: document.getElementById('clearBtn'),
-      applyMusicBtn: document.getElementById('applyMusicBtn'),
-      toggleMusicBtn: document.getElementById('toggleMusicBtn'),
-      prevBtn: document.getElementById('prevBtn'),
-      nextBtn: document.getElementById('nextBtn'),
+    const appState = {
+      mode: 'b2c',
+      b2c: {
+        deployModel: 'B2C Direct',
+        frontendModel: 'Next.js SSR',
+        backendModel: 'Modular Monolith',
+        paymentModel: 'PG + Wallet',
+        catalogLatency: '< 200ms',
+        conversionRate: '3.8%',
+        aovTarget: '₫780K',
+        platformScope: 'Multi-language / Multi-currency',
+        visitorsOnline: 18240,
+        activeCarts: 1482,
+        checkoutSuccess: 72.4,
+        openOrders: 684,
+        cacheHit: 93.1,
+        funnel: [100, 62, 24, 8]
+      },
+      marketplace: {
+        deployModel: 'Marketplace Hybrid',
+        frontendModel: 'Nuxt SSR',
+        backendModel: 'Microservices',
+        paymentModel: 'Escrow + PG + Wallet',
+        catalogLatency: '< 180ms',
+        conversionRate: '4.1%',
+        aovTarget: '₫920K',
+        platformScope: 'Multi-store / Multi-currency',
+        visitorsOnline: 26480,
+        activeCarts: 2316,
+        checkoutSuccess: 69.2,
+        openOrders: 1268,
+        cacheHit: 95.4,
+        funnel: [100, 58, 22, 9]
+      }
     };
 
-    const sampleImages = [
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80'
-    ];
+    const refs = {
+      toggleModeBtn: document.getElementById('toggleModeBtn'),
+      simulateBtn: document.getElementById('simulateBtn'),
+      deployModel: document.getElementById('deployModel'),
+      frontendModel: document.getElementById('frontendModel'),
+      backendModel: document.getElementById('backendModel'),
+      paymentModel: document.getElementById('paymentModel'),
+      catalogLatency: document.getElementById('catalogLatency'),
+      conversionRate: document.getElementById('conversionRate'),
+      aovTarget: document.getElementById('aovTarget'),
+      platformScope: document.getElementById('platformScope'),
+      visitorsOnline: document.getElementById('visitorsOnline'),
+      activeCarts: document.getElementById('activeCarts'),
+      checkoutSuccess: document.getElementById('checkoutSuccess'),
+      openOrders: document.getElementById('openOrders'),
+      cacheHit: document.getElementById('cacheHit'),
+      funnelChart: document.getElementById('funnelChart')
+    };
 
-    let state = loadState();
-    let pages = [];
-    let currentIndex = 0;
-    let endingTyped = false;
-
-    hydrateForm();
-    renderThumbs();
-    buildBook();
-    bindEvents();
-    autoRestoreMusic();
-
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) return JSON.parse(raw);
-      } catch (err) {
-        console.warn('Không đọc được localStorage:', err);
-      }
-      return {
-        title: 'Memory Album',
-        subtitle: 'Reiyo Matsumoto',
-        endingMessage: 'I love three things in this world: The sun ☀️, the moon 🌕 and you ❤️.\nThe sun for the morning, the moon for the night and you, forever ❤️❤️❤️',
-        musicUrl: '',
-        images: []
-      };
+    function currentConfig() {
+      return appState[appState.mode];
     }
 
-    function saveState(showAlert = false) {
-      state.title = els.albumTitle.value.trim() || 'Memory Album';
-      state.subtitle = els.albumSubtitle.value.trim() || 'Reiyo Matsumoto';
-      state.endingMessage = els.endingMessage.value.trim() || 'Forever ❤️';
-      state.musicUrl = els.musicUrl.value.trim();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      if (showAlert) alert('Đã lưu album trên trình duyệt.');
+    function formatNumber(value) {
+      return new Intl.NumberFormat('vi-VN').format(value);
     }
 
-    function hydrateForm() {
-      els.albumTitle.value = state.title || '';
-      els.albumSubtitle.value = state.subtitle || '';
-      els.endingMessage.value = state.endingMessage || '';
-      els.musicUrl.value = state.musicUrl || '';
-    }
-
-    function isValidUrl(value) {
-      try {
-        const url = new URL(value);
-        return /^https?:/.test(url.protocol);
-      } catch {
-        return false;
-      }
-    }
-
-    function addImage(url) {
-      const clean = url.trim();
-      if (!clean) return;
-      if (!isValidUrl(clean)) {
-        alert('Link ảnh chưa đúng. Hãy dán link bắt đầu bằng http hoặc https.');
-        return;
-      }
-      state.images.push(clean);
-      els.imageUrl.value = '';
-      saveState();
-      renderThumbs();
-      buildBook();
-    }
-
-    function addBulkImages(raw) {
-      const urls = raw.split('\n').map(s => s.trim()).filter(Boolean);
-      if (!urls.length) return;
-      const validUrls = urls.filter(isValidUrl);
-      if (!validUrls.length) {
-        alert('Không có link hợp lệ nào trong danh sách.');
-        return;
-      }
-      state.images.push(...validUrls);
-      els.bulkUrls.value = '';
-      saveState();
-      renderThumbs();
-      buildBook();
-    }
-
-    function removeImage(index) {
-      state.images.splice(index, 1);
-      saveState();
-      renderThumbs();
-      buildBook();
-    }
-
-    function renderThumbs() {
-      els.thumbList.innerHTML = '';
-      if (!state.images.length) {
-        els.thumbList.innerHTML = '<div class="hint" style="grid-column:1/-1">Chưa có ảnh nào. Dán link ảnh vào để bắt đầu.</div>';
-      } else {
-        state.images.forEach((src, index) => {
-          const item = document.createElement('div');
-          item.className = 'thumb';
-          item.innerHTML = `<img src="${escapeHtml(src)}" alt="thumb ${index + 1}"><button title="Xóa ảnh">×</button>`;
-          item.querySelector('button').addEventListener('click', () => removeImage(index));
-          els.thumbList.appendChild(item);
-        });
-      }
-      els.statusChip.textContent = `${state.images.length} ảnh`;
-    }
-
-    function buildBook() {
-      pages = [];
-      currentIndex = 0;
-      endingTyped = false;
-      els.book.innerHTML = '';
-
-      if (!state.images.length) {
-        els.book.innerHTML = `
-          <div class="empty-state panel" style="width:min(420px,100%);border-radius:24px;">
-            <div>
-              <div style="font-size:48px; margin-bottom:10px;">📷</div>
-              <h3 style="margin:0 0 8px; font-family:Pacifico, cursive; color:#d6739f; font-weight:400;">Album đang trống</h3>
-              <p style="margin:0; color:var(--muted); line-height:1.7;">Hãy dán link ảnh ở bên trái rồi bấm <b>Thêm ảnh</b> hoặc <b>Thêm nhiều ảnh</b>.</p>
-            </div>
-          </div>`;
-        updatePageChip();
-        return;
-      }
-
-      const intro = createPage({
-        front: `
-          <div class="cover">
-            <h3>${escapeHtml(state.title)}</h3>
-            <p>${escapeHtml(state.subtitle)}</p>
-            <p>💝 Nhấn vào trang để lật album</p>
-          </div>`,
-        back: '<div class="cover"><p>Bắt đầu hành trình kỷ niệm ✨</p></div>',
-        z: 1000
-      });
-      els.book.appendChild(intro.page);
-      pages.push(intro.page);
-
-      for (let i = 0; i < state.images.length; i += 2) {
-        const frontImage = state.images[i];
-        const backImage = state.images[i + 1];
-        const pageObj = createPage({
-          front: `<img src="${escapeHtml(frontImage)}" alt="Ảnh ${i + 1}">`,
-          back: backImage ? `<img src="${escapeHtml(backImage)}" alt="Ảnh ${i + 2}">` : '<div class="cover"><p>Trang cuối của bộ ảnh này 💗</p></div>',
-          z: 999 - i
-        });
-        els.book.appendChild(pageObj.page);
-        pages.push(pageObj.page);
-      }
-
-      const end = createPage({
-        front: `
-          <div class="ending">
-            <h3>❤️ The End ❤️</h3>
-            <div class="typing" id="endingText"></div>
-          </div>`,
-        back: '<div class="cover"><p>Cảm ơn vì đã xem hết album 🌷</p></div>',
-        z: 1
-      });
-      els.book.appendChild(end.page);
-      pages.push(end.page);
-
-      pages.forEach((page, index) => attachFlipEvents(page, index));
-      updatePageLayers();
-      updatePageChip();
-    }
-
-    function createPage({ front, back, z }) {
-      const page = document.createElement('div');
-      page.className = 'page';
-      page.style.zIndex = z;
-      page.innerHTML = `
-        <div class="page-face page-front">${front}</div>
-        <div class="page-face page-back">${back}</div>
-      `;
-      return { page };
-    }
-
-    function attachFlipEvents(page, index) {
-      const front = page.querySelector('.page-front');
-      const back = page.querySelector('.page-back');
-      front.addEventListener('click', () => flipForward(index));
-      back.addEventListener('click', () => flipBackward(index));
-
-      let startX = 0;
-      page.addEventListener('touchstart', (e) => {
-        startX = e.changedTouches[0].clientX;
-      }, { passive: true });
-      page.addEventListener('touchend', (e) => {
-        const diff = e.changedTouches[0].clientX - startX;
-        if (diff < -30) flipForward(index);
-        if (diff > 30) flipBackward(index);
-      }, { passive: true });
-    }
-
-    function flipForward(index = currentIndex) {
-      if (index >= pages.length) return;
-      const page = pages[index];
-      if (!page || page.classList.contains('flipped')) return;
-      page.classList.add('flipped');
-      currentIndex = Math.min(index + 1, pages.length);
-      updatePageLayers();
-      updatePageChip();
-      maybeTypeEnding();
-      tryAutoplayMusic();
-    }
-
-    function flipBackward(index = currentIndex - 1) {
-      if (index < 0) return;
-      const page = pages[index];
-      if (!page || !page.classList.contains('flipped')) return;
-      page.classList.remove('flipped');
-      currentIndex = index;
-      updatePageLayers();
-      updatePageChip();
-    }
-
-    function updatePageLayers() {
-      pages.forEach((page, idx) => {
-        page.style.zIndex = page.classList.contains('flipped') ? idx + 1 : 1000 - idx;
+    function renderChart(values) {
+      refs.funnelChart.innerHTML = '';
+      values.forEach((value) => {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = `${Math.max(24, value * 2)}px`;
+        bar.dataset.value = `${value}%`;
+        refs.funnelChart.appendChild(bar);
       });
     }
 
-    function updatePageChip() {
-      els.pageChip.textContent = `Trang ${Math.min(currentIndex + 1, pages.length)} / ${pages.length}`;
+    function renderDashboard() {
+      const cfg = currentConfig();
+      refs.deployModel.textContent = cfg.deployModel;
+      refs.frontendModel.textContent = cfg.frontendModel;
+      refs.backendModel.textContent = cfg.backendModel;
+      refs.paymentModel.textContent = cfg.paymentModel;
+      refs.catalogLatency.textContent = cfg.catalogLatency;
+      refs.conversionRate.textContent = cfg.conversionRate;
+      refs.aovTarget.textContent = cfg.aovTarget;
+      refs.platformScope.textContent = cfg.platformScope;
+      refs.visitorsOnline.textContent = formatNumber(cfg.visitorsOnline);
+      refs.activeCarts.textContent = formatNumber(cfg.activeCarts);
+      refs.checkoutSuccess.textContent = `${cfg.checkoutSuccess.toFixed(1)}%`;
+      refs.openOrders.textContent = formatNumber(cfg.openOrders);
+      refs.cacheHit.textContent = `${cfg.cacheHit.toFixed(1)}%`;
+      renderChart(cfg.funnel);
     }
 
-    function maybeTypeEnding() {
-      if (endingTyped) return;
-      const endingIndex = pages.length - 1;
-      if (currentIndex >= endingIndex) {
-        const target = document.getElementById('endingText');
-        if (!target) return;
-        typeWriter(state.endingMessage || 'Forever ❤️', target, 26);
-        endingTyped = true;
-      }
+    function toggleMode() {
+      appState.mode = appState.mode === 'b2c' ? 'marketplace' : 'b2c';
+      renderDashboard();
     }
 
-    function typeWriter(text, element, speed = 30) {
-      element.innerHTML = '';
-      let i = 0;
-      const run = () => {
-        if (i < text.length) {
-          const char = text[i];
-          element.innerHTML += char === '\n' ? '<br>' : escapeHtml(char);
-          i++;
-          setTimeout(run, speed);
-        }
-      };
-      run();
-    }
+    function simulateTraffic() {
+      const cfg = currentConfig();
+      const visitors = cfg.visitorsOnline + Math.floor(Math.random() * 3200);
+      const carts = cfg.activeCarts + Math.floor(Math.random() * 420);
+      const checkout = Math.max(55, cfg.checkoutSuccess + (Math.random() * 6 - 3));
+      const orders = cfg.openOrders + Math.floor(Math.random() * 180);
+      const cache = Math.max(84, cfg.cacheHit + (Math.random() * 2 - 1));
+      refs.visitorsOnline.textContent = formatNumber(visitors);
+      refs.activeCarts.textContent = formatNumber(carts);
+      refs.checkoutSuccess.textContent = `${checkout.toFixed(1)}%`;
+      refs.openOrders.textContent = formatNumber(orders);
+      refs.cacheHit.textContent = `${cache.toFixed(1)}%`;
 
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    function applyMusic() {
-      const url = els.musicUrl.value.trim();
-      state.musicUrl = url;
-      saveState();
-      if (!url) {
-        els.sound.removeAttribute('src');
-        els.sound.load();
-        return;
-      }
-      if (!isValidUrl(url)) {
-        alert('Link nhạc chưa đúng.');
-        return;
-      }
-      els.sound.src = url;
-      els.sound.loop = true;
-      els.sound.load();
-    }
-
-    function autoRestoreMusic() {
-      if (state.musicUrl && isValidUrl(state.musicUrl)) {
-        els.sound.src = state.musicUrl;
-        els.sound.loop = true;
-      }
-    }
-
-    function tryAutoplayMusic() {
-      if (!els.sound.src) return;
-      els.sound.play().catch(() => {});
-    }
-
-    function toggleMusic() {
-      if (!els.sound.src) {
-        alert('Bạn chưa thêm link nhạc mp3.');
-        return;
-      }
-      if (els.sound.paused) {
-        els.sound.play().catch(() => alert('Trình duyệt đang chặn autoplay. Hãy bấm lại sau khi đã chạm vào trang.'));
-      } else {
-        els.sound.pause();
-      }
-    }
-
-    function bindEvents() {
-      els.addImageBtn.addEventListener('click', () => addImage(els.imageUrl.value));
-      els.addBulkBtn.addEventListener('click', () => addBulkImages(els.bulkUrls.value));
-      els.addSampleBtn.addEventListener('click', () => {
-        state.images.push(...sampleImages);
-        saveState();
-        renderThumbs();
-        buildBook();
+      const funnel = cfg.funnel.map((v, i) => {
+        const variance = i === 0 ? 0 : 4;
+        return Math.max(6, Math.min(100, v + Math.floor(Math.random() * variance * 2 - variance)));
       });
-      els.saveBtn.addEventListener('click', () => saveState(true));
-      els.rebuildBtn.addEventListener('click', () => {
-        saveState();
-        renderThumbs();
-        buildBook();
-      });
-      els.clearBtn.addEventListener('click', () => {
-        if (!confirm('Bạn chắc chắn muốn xóa toàn bộ ảnh và dữ liệu album?')) return;
-        state = {
-          title: 'Memory Album',
-          subtitle: 'Reiyo Matsumoto',
-          endingMessage: 'I love three things in this world: The sun ☀️, the moon 🌕 and you ❤️.\nThe sun for the morning, the moon for the night and you, forever ❤️❤️❤️',
-          musicUrl: '',
-          images: []
-        };
-        saveState();
-        hydrateForm();
-        renderThumbs();
-        buildBook();
-        els.sound.pause();
-        els.sound.removeAttribute('src');
-      });
-      els.applyMusicBtn.addEventListener('click', applyMusic);
-      els.toggleMusicBtn.addEventListener('click', toggleMusic);
-      els.prevBtn.addEventListener('click', () => flipBackward());
-      els.nextBtn.addEventListener('click', () => flipForward());
-
-      [els.albumTitle, els.albumSubtitle, els.endingMessage, els.musicUrl].forEach(input => {
-        input.addEventListener('change', () => saveState());
-      });
-
-      els.imageUrl.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') addImage(els.imageUrl.value);
-      });
-
-      document.addEventListener('click', tryAutoplayMusic, { passive: true });
+      renderChart(funnel);
     }
+
+    refs.toggleModeBtn.addEventListener('click', toggleMode);
+    refs.simulateBtn.addEventListener('click', simulateTraffic);
+    renderDashboard();
   </script>
 </body>
 </html>
