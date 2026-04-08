@@ -3,1404 +3,1064 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nền tảng Bán Hàng Trực Tuyến - All In One</title>
+  <title>Chat UI - Similar Messenger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #071018;
-      --bg-soft: #0d1724;
-      --panel: rgba(13, 23, 36, 0.82);
-      --panel-2: rgba(18, 31, 48, 0.9);
-      --line: rgba(255, 255, 255, 0.08);
-      --text: #eff6ff;
-      --muted: #9db0c7;
-      --primary: #61dafb;
-      --primary-2: #7cf3c8;
-      --warning: #ffcc66;
-      --danger: #ff7f96;
-      --success: #7cf3c8;
-      --shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
-      --radius-xl: 28px;
-      --radius-lg: 20px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
+    :root{
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --panel-2: #f8fafc;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-2: #1d4ed8;
+      --bubble-me: #dbeafe;
+      --bubble-other: #ffffff;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --success: #16a34a;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --chip: #eef2ff;
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
+    [data-theme="dark"]{
+      --bg: #0b1220;
+      --panel: #111827;
+      --panel-2: #0f172a;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --border: #1f2937;
+      --primary: #60a5fa;
+      --primary-2: #3b82f6;
+      --bubble-me: #1e3a8a;
+      --bubble-other: #1f2937;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      --chip: #172554;
+    }
+
+    *{
+      box-sizing: border-box;
+    }
+
+    html, body{
       margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: "Inter", sans-serif;
+      background: var(--bg);
       color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(97, 218, 251, 0.16), transparent 28%),
-        radial-gradient(circle at top right, rgba(124, 243, 200, 0.12), transparent 22%),
-        linear-gradient(180deg, #06101a 0%, #091422 44%, #060d16 100%);
-      min-height: 100vh;
+      overflow: hidden;
     }
 
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
-    button, input, select { font: inherit; }
-
-    .grid-bg {
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 28px 28px;
-      mask-image: linear-gradient(to bottom, rgba(255,255,255,0.45), transparent 85%);
-      pointer-events: none;
-      z-index: 0;
+    button, input{
+      font-family: inherit;
     }
 
-    .container {
-      width: min(1240px, calc(100% - 32px));
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
+    .app{
+      display: grid;
+      grid-template-columns: 320px 1fr 320px;
+      height: 100vh;
+      gap: 0;
+      background: var(--bg);
     }
 
-    .glass {
+    .sidebar-left,
+    .chat-main,
+    .sidebar-right{
+      border-right: 1px solid var(--border);
       background: var(--panel);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-      border-radius: var(--radius-xl);
+      min-width: 0;
     }
 
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(18px);
-      background: rgba(6, 10, 18, 0.7);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+    .sidebar-left{
+      display: flex;
+      flex-direction: column;
     }
 
-    .nav {
+    .sidebar-right{
+      background: var(--panel-2);
+      overflow-y: auto;
+    }
+
+    .topbar{
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      padding: 16px 0;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
     }
 
-    .brand {
+    .brand{
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
+      min-width: 0;
     }
 
-    .brand-mark {
+    .brand .logo{
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+    }
+
+    .brand .title{
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand .subtitle{
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .icon-btn{
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .icon-btn:hover{
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+
+    .search-wrap{
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .search{
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 13px 15px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .search:focus{
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
+    }
+
+    .chat-list{
+      overflow-y: auto;
+      flex: 1;
+      padding: 8px;
+    }
+
+    .chat-item{
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 18px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      align-items: center;
+    }
+
+    .chat-item:hover{
+      background: var(--panel-2);
+    }
+
+    .chat-item.active{
+      background: var(--chip);
+      border: 1px solid rgba(96,165,250,.35);
+    }
+
+    .avatar{
       width: 48px;
       height: 48px;
-      border-radius: 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
       display: grid;
       place-items: center;
-      font-weight: 900;
-      color: #041019;
-      background: linear-gradient(135deg, var(--primary), var(--primary-2));
-    }
-
-    .brand h1, .brand p {
-      margin: 0;
-    }
-
-    .brand h1 { font-size: 1rem; }
-    .brand p { color: var(--muted); font-size: 0.86rem; }
-
-    .nav-links {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      color: var(--muted);
-    }
-
-    .nav-links a:hover { color: var(--text); }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 24px;
-      padding: 52px 0 28px;
-      align-items: stretch;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      margin-bottom: 14px;
-      color: var(--primary-2);
-      font-size: 0.82rem;
-      letter-spacing: 0.1em;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    .hero h2 {
-      margin: 0;
-      font-size: clamp(2.1rem, 5vw, 4.2rem);
-      line-height: 1.04;
-      max-width: 12ch;
-    }
-
-    .hero p {
-      color: var(--muted);
-      line-height: 1.75;
-      font-size: 1.04rem;
-      margin: 18px 0 26px;
-      max-width: 66ch;
-    }
-
-    .actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-bottom: 26px;
-    }
-
-    .btn {
-      border: 0;
-      border-radius: 16px;
-      padding: 14px 18px;
-      cursor: pointer;
-      transition: transform .2s ease, opacity .2s ease;
-      font-weight: 800;
-    }
-
-    .btn:hover { transform: translateY(-2px); }
-    .btn-primary {
-      color: #041019;
-      background: linear-gradient(135deg, var(--primary), #a9f1ff);
-      box-shadow: 0 14px 30px rgba(97, 218, 251, 0.22);
-    }
-    .btn-secondary {
-      color: var(--text);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .kpi-card, .card, .stat-card, .wire-box, .table-wrap, .timeline-item {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.035);
-      border-radius: var(--radius-lg);
-      padding: 18px;
-    }
-
-    .kpi-card span, .stat-card span, .phase, .small-label {
-      color: var(--muted);
-      font-size: 0.85rem;
-      display: block;
-    }
-
-    .kpi-card strong, .stat-card strong {
-      margin-top: 8px;
-      display: block;
-      font-size: 1.28rem;
-    }
-
-    .hero-side {
-      padding: 22px;
-    }
-
-    .panel-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      margin-bottom: 18px;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--success);
-      box-shadow: 0 0 0 6px rgba(124, 243, 200, 0.12);
-    }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 14px;
-    }
-
-    .simulation {
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 20px;
-      border: 1px dashed rgba(255,255,255,0.1);
-      background: rgba(0,0,0,0.18);
-    }
-
-    .sim-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 11px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      color: var(--muted);
-    }
-
-    .sim-row strong { color: var(--text); }
-    .sim-row:last-child { border-bottom: none; }
-
-    section.section { padding: 28px 0; }
-    .section-head { margin-bottom: 18px; }
-    .section-head h3 {
-      margin: 0;
-      font-size: clamp(1.5rem, 3vw, 2.4rem);
-    }
-
-    .section-head p {
-      color: var(--muted);
-      line-height: 1.7;
-      margin: 10px 0 0;
-      max-width: 76ch;
-    }
-
-    .cards-3, .cards-4, .cards-2 {
-      display: grid;
-      gap: 18px;
-    }
-
-    .cards-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
-    .cards-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
-    .cards-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
-
-    .card h4 {
-      margin: 0 0 10px;
-      font-size: 1.03rem;
-    }
-
-    .card p, .card li {
-      color: var(--muted);
-      line-height: 1.72;
-    }
-
-    .card ul {
-      margin: 0;
-      padding-left: 20px;
-    }
-
-    .architecture {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      gap: 14px;
-      padding: 20px;
-    }
-
-    .arch-col {
-      padding: 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .arch-col h4 { margin: 0 0 12px; }
-
-    .arch-item {
-      padding: 12px 14px;
-      border-radius: 14px;
-      margin-bottom: 10px;
-      color: var(--muted);
-      background: rgba(0,0,0,0.16);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .journey {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 18px;
-    }
-
-    .journey-flow {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .journey-flow span {
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(97,218,251,0.24);
-      background: rgba(97,218,251,0.1);
-      font-size: 0.92rem;
-      color: #dffbff;
-    }
-
-    .feature-board {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 18px;
-    }
-
-    .wireframe-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 14px;
-      margin-top: 12px;
-    }
-
-    .wire-box {
-      min-height: 155px;
+      color: white;
+      font-weight: 700;
+      flex-shrink: 0;
       position: relative;
-      overflow: hidden;
+      box-shadow: var(--shadow);
     }
 
-    .wire-box::before {
+    .avatar.online::after{
       content: "";
       position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(97,218,251,0.08), transparent 55%);
-      pointer-events: none;
+      width: 12px;
+      height: 12px;
+      right: 1px;
+      bottom: 1px;
+      border-radius: 50%;
+      background: var(--success);
+      border: 2px solid var(--panel);
     }
 
-    .wire-header, .wire-line, .wire-chip, .wire-button {
-      border-radius: 10px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.06);
+    .chat-meta{
+      min-width: 0;
+      flex: 1;
     }
 
-    .wire-header { height: 16px; width: 54%; margin-bottom: 14px; }
-    .wire-line { height: 12px; margin-bottom: 10px; }
-    .wire-line.short { width: 60%; }
-    .wire-chip { display: inline-block; width: 82px; height: 30px; margin: 6px 6px 0 0; }
-    .wire-button { width: 120px; height: 40px; margin-top: 14px; }
-
-    .catalog-grid {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 18px;
-    }
-
-    .filters .filter-group {
-      margin-bottom: 16px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .filters h5 {
-      margin: 0 0 10px;
-      font-size: .96rem;
-    }
-
-    .chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .chip {
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--muted);
-      font-size: .9rem;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 14px;
-    }
-
-    .product-card {
-      border-radius: 20px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.04);
-    }
-
-    .product-thumb {
-      aspect-ratio: 1 / 1;
-      background:
-        linear-gradient(135deg, rgba(97,218,251,0.18), rgba(124,243,200,0.08)),
-        radial-gradient(circle at top right, rgba(255,255,255,0.12), transparent 30%),
-        #0f1928;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      color: rgba(255,255,255,0.75);
-      font-size: 1.05rem;
-    }
-
-    .product-body {
-      padding: 14px;
-    }
-
-    .price-row {
+    .chat-meta .row{
       display: flex;
       justify-content: space-between;
       gap: 10px;
       align-items: center;
-      margin-top: 12px;
     }
 
-    .price { font-weight: 800; }
-    .badge {
+    .chat-meta .name{
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-meta .time{
+      font-size: 11px;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .chat-meta .last{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .badge{
+      min-width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      font-size: .82rem;
-      color: #defcff;
-      background: rgba(97,218,251,0.12);
-      border: 1px solid rgba(97,218,251,0.2);
+      justify-content: center;
+      padding: 0 7px;
+      margin-left: 8px;
+      flex-shrink: 0;
     }
 
-    .checkout-layout {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 18px;
+    .chat-main{
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      position: relative;
     }
 
-    .stepper {
+    .chat-header{
+      height: 76px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      gap: 10px;
+      background: var(--panel);
+    }
+
+    .chat-user{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .chat-user .info{
+      min-width: 0;
+    }
+
+    .chat-user .name{
+      font-weight: 800;
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-user .status{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .status-dot{
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      margin-right: 6px;
+    }
+
+    .chat-actions{
       display: flex;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
+      flex-shrink: 0;
     }
 
-    .step {
-      padding: 10px 14px;
+    .messages{
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 18px;
+      scroll-behavior: smooth;
+    }
+
+    .day-separator{
+      display: flex;
+      justify-content: center;
+      margin: 14px 0 20px;
+    }
+
+    .day-separator span{
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 7px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--muted);
-      background: rgba(255,255,255,0.04);
-      font-size: .92rem;
     }
 
-    .step.active {
-      color: #041019;
-      background: linear-gradient(135deg, var(--primary), var(--primary-2));
-      border-color: transparent;
-      font-weight: 800;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 12px;
-    }
-
-    .field {
+    .msg-row{
       display: flex;
-      flex-direction: column;
-      gap: 8px;
       margin-bottom: 12px;
+      align-items: flex-end;
+      gap: 8px;
+      animation: fadeUp 0.22s ease;
     }
 
-    .field label {
-      color: var(--muted);
-      font-size: .92rem;
+    .msg-row.me{
+      justify-content: flex-end;
     }
 
-    .field input, .field select {
-      height: 46px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      padding: 0 14px;
-      outline: none;
+    .msg{
+      max-width: min(74%, 560px);
+      padding: 12px 14px;
+      border-radius: 18px;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+      line-height: 1.45;
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border: 1px solid var(--border);
+      position: relative;
     }
 
-    .summary-list {
+    .msg.me{
+      background: var(--bubble-me);
+      border-bottom-right-radius: 6px;
+    }
+
+    .msg.other{
+      background: var(--bubble-other);
+      border-bottom-left-radius: 6px;
+    }
+
+    .msg .meta{
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin: 14px 0 18px;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--muted);
     }
 
-    .summary-item, .order-step {
+    .msg .file{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,.2);
+      border: 1px dashed rgba(255,255,255,.3);
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin-top: 8px;
+    }
+
+    .typing{
+      display: none;
+      padding: 0 18px 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .typing.show{
+      display: block;
+    }
+
+    .composer{
+      border-top: 1px solid var(--border);
+      background: var(--panel);
+      padding: 14px 16px;
+    }
+
+    .composer-inner{
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 10px;
+    }
+
+    .composer textarea{
+      flex: 1;
+      resize: none;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+      min-height: 22px;
+      max-height: 120px;
+      line-height: 1.5;
+      padding: 4px 6px;
+    }
+
+    .send-btn{
+      border: none;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      transition: 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover{
+      transform: scale(1.03);
+    }
+
+    .composer-tools{
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .section{
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section h3{
+      margin: 0 0 14px;
+      font-size: 15px;
+    }
+
+    .profile-card{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .profile-card .big-avatar{
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f97316, #ec4899);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .profile-card .name{
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .profile-card .bio{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .info-list{
+      display: grid;
+      gap: 10px;
+    }
+
+    .info-item{
       display: flex;
       justify-content: space-between;
-      gap: 16px;
-      color: var(--muted);
-    }
-
-    .summary-item strong, .order-step strong { color: var(--text); }
-
-    .timeline {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      gap: 14px;
-    }
-
-    .phase {
-      margin-bottom: 10px;
-      color: var(--primary-2);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      font-weight: 800;
-    }
-
-    .analytics-wrap {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-
-    .chart {
-      height: 240px;
-      display: flex;
-      align-items: end;
-      gap: 14px;
-      padding-top: 22px;
-    }
-
-    .bar {
-      flex: 1;
-      border-radius: 16px 16px 6px 6px;
-      background: linear-gradient(180deg, var(--primary-2), var(--primary));
-      position: relative;
-      min-height: 16px;
-      transition: height .35s ease;
-    }
-
-    .bar::after {
-      content: attr(data-value);
-      position: absolute;
-      top: -28px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: .82rem;
-      color: var(--text);
-      white-space: nowrap;
-    }
-
-    .chart-legend {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
       gap: 12px;
-      margin-top: 10px;
-      text-align: center;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 13px;
+    }
+
+    .info-item span{
       color: var(--muted);
-      font-size: .9rem;
     }
 
-    .table-wrap {
-      overflow: auto;
+    .thumb-grid{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 780px;
+    .thumb{
+      aspect-ratio: 1;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #93c5fd, #c084fc);
+      border: 1px solid var(--border);
     }
 
-    th, td {
-      padding: 14px 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      text-align: left;
-      color: var(--muted);
-      vertical-align: top;
-    }
-
-    th { color: var(--text); font-size: .95rem; }
-
-    .stack {
+    .toggle{
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-top: 10px;
     }
 
-    .stack span {
-      padding: 10px 12px;
+    .switch{
+      width: 48px;
+      height: 28px;
       border-radius: 999px;
-      background: rgba(124,243,200,0.1);
-      color: #ddfff6;
-      border: 1px solid rgba(124,243,200,0.18);
-      font-size: .88rem;
+      background: #cbd5e1;
+      position: relative;
+      cursor: pointer;
+      transition: 0.2s ease;
+      flex-shrink: 0;
     }
 
-    .footer {
-      padding: 24px 0 42px;
-      color: var(--muted);
-      text-align: center;
+    .switch::after{
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: 0.2s ease;
+      box-shadow: 0 3px 8px rgba(0,0,0,.15);
     }
 
-    @media (max-width: 1100px) {
-      .hero,
-      .feature-board,
-      .checkout-layout,
-      .analytics-wrap,
-      .journey,
-      .catalog-grid,
-      .cards-4,
-      .cards-3,
-      .timeline,
-      .architecture,
-      .product-grid,
-      .kpi-grid {
-        grid-template-columns: 1fr 1fr;
+    .switch.on{
+      background: var(--primary);
+    }
+
+    .switch.on::after{
+      left: 23px;
+    }
+
+    .hidden-mobile{
+      display: block;
+    }
+
+    .mobile-top-actions{
+      display: none;
+    }
+
+    @keyframes fadeUp{
+      from{opacity: 0; transform: translateY(6px);}
+      to{opacity: 1; transform: translateY(0);}
+    }
+
+    @media (max-width: 1100px){
+      .app{
+        grid-template-columns: 300px 1fr;
+      }
+      .sidebar-right{
+        display: none;
       }
     }
 
-    @media (max-width: 760px) {
-      .nav { display: block; }
-      .nav-links { margin-top: 12px; }
-      .hero,
-      .feature-board,
-      .checkout-layout,
-      .analytics-wrap,
-      .journey,
-      .catalog-grid,
-      .cards-4,
-      .cards-3,
-      .cards-2,
-      .timeline,
-      .architecture,
-      .product-grid,
-      .kpi-grid,
-      .stat-grid,
-      .wireframe-grid,
-      .form-grid {
+    @media (max-width: 820px){
+      .app{
         grid-template-columns: 1fr;
       }
-
-      .hero h2 { max-width: 100%; }
-      .container { width: min(100% - 20px, 1240px); }
+      .sidebar-left{
+        display: none;
+      }
+      .hidden-mobile{
+        display: none;
+      }
+      .mobile-top-actions{
+        display: flex;
+      }
+      .chat-header{
+        height: auto;
+        padding: 12px 14px;
+      }
+      .messages{
+        padding: 18px 14px;
+      }
+      .composer{
+        padding: 12px;
+      }
+      .msg{
+        max-width: 86%;
+      }
+      .sidebar-right{
+        display: none;
+      }
+      body.show-left .sidebar-left{
+        display: flex;
+      }
+      body.show-left .chat-main{
+        display: none;
+      }
+      body.show-left .sidebar-right{
+        display: none;
+      }
+      body.show-right .sidebar-right{
+        display: block;
+      }
+      body.show-right .chat-main,
+      body.show-right .sidebar-left{
+        display: none;
+      }
     }
   </style>
 </head>
-<body>
-  <div class="grid-bg"></div>
-
-  <header class="header">
-    <div class="container nav">
-      <div class="brand">
-        <div class="brand-mark">EC</div>
-        <div>
-          <h1>Ecommerce Platform</h1>
-          <p>All-in-one single file prototype</p>
-        </div>
-      </div>
-      <nav class="nav-links">
-        <a href="#overview">Tổng quan</a>
-        <a href="#journey">Journey</a>
-        <a href="#frontend">Frontend</a>
-        <a href="#backend">Backend</a>
-        <a href="#analytics">Analytics</a>
-        <a href="#deliverables">Deliverables</a>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container">
-    <section class="hero" id="overview">
-      <div>
-        <span class="eyebrow">Thiết kế & triển khai nền tảng bán hàng trực tuyến</span>
-        <h2>Nền tảng ecommerce đầy đủ catalog, cart, checkout, admin, báo cáo và tích hợp hệ sinh thái.</h2>
-        <p>
-          Bản demo một file này mô phỏng định hướng sản phẩm và kỹ thuật cho một nền tảng bán hàng trực tuyến
-          mobile-first, SEO-friendly, hỗ trợ đa ngôn ngữ, đa tiền tệ, CRM, kho, vận chuyển và ví/PG. Trọng tâm là
-          hiệu năng dưới <strong>200ms</strong> ở trang danh mục, tối ưu chuyển đổi bằng <strong>A/B testing</strong>,
-          và chuẩn vận hành đơn hàng <strong>4 bước: tạo → xác nhận → giao → hoàn thành</strong>.
-        </p>
-
-        <div class="actions">
-          <button class="btn btn-primary" id="toggleModeBtn">Chuyển B2C / Marketplace</button>
-          <button class="btn btn-secondary" id="simulateBtn">Mô phỏng traffic</button>
-        </div>
-
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <span>Danh mục response time</span>
-            <strong id="catalogLatency">&lt; 200ms</strong>
-          </div>
-          <div class="kpi-card">
-            <span>CR mục tiêu</span>
-            <strong id="conversionRate">3.8%</strong>
-          </div>
-          <div class="kpi-card">
-            <span>AOV mục tiêu</span>
-            <strong id="aovTarget">₫780K</strong>
-          </div>
-          <div class="kpi-card">
-            <span>Hỗ trợ</span>
-            <strong id="platformScope">Multi-language / Multi-currency</strong>
+<body data-theme="light">
+  <div class="app">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar-left">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo">C</div>
+          <div>
+            <div class="title">Chat Connect</div>
+            <div class="subtitle">Tương tự Messenger</div>
           </div>
         </div>
+        <button class="icon-btn" id="themeToggle" title="Đổi giao diện">🌙</button>
       </div>
 
-      <aside class="glass hero-side">
-        <div class="panel-title">
-          <span class="dot"></span>
-          <span>Commerce Control Center</span>
-        </div>
+      <div class="search-wrap">
+        <input class="search" id="searchInput" placeholder="Tìm kiếm cuộc trò chuyện..." />
+      </div>
 
-        <div class="stat-grid">
-          <div class="stat-card">
-            <span>Triển khai</span>
-            <strong id="deployModel">B2C Direct</strong>
-          </div>
-          <div class="stat-card">
-            <span>Frontend</span>
-            <strong id="frontendModel">Next.js SSR</strong>
-          </div>
-          <div class="stat-card">
-            <span>Backend</span>
-            <strong id="backendModel">Modular Monolith</strong>
-          </div>
-          <div class="stat-card">
-            <span>Thanh toán</span>
-            <strong id="paymentModel">PG + Wallet</strong>
+      <div class="chat-list" id="chatList"></div>
+    </aside>
+
+    <!-- MAIN CHAT -->
+    <main class="chat-main">
+      <div class="chat-header">
+        <div class="chat-user">
+          <button class="icon-btn mobile-top-actions" id="backToList" title="Danh sách chat">←</button>
+          <div class="avatar online" id="headerAvatar">A</div>
+          <div class="info">
+            <div class="name" id="chatName">Alex Nguyen</div>
+            <div class="status"><span class="status-dot"></span><span id="chatStatus">Đang hoạt động</span></div>
           </div>
         </div>
 
-        <div class="simulation">
-          <div class="sim-row"><span>Visitors online</span><strong id="visitorsOnline">18,240</strong></div>
-          <div class="sim-row"><span>Active carts</span><strong id="activeCarts">1,482</strong></div>
-          <div class="sim-row"><span>Checkout success</span><strong id="checkoutSuccess">72.4%</strong></div>
-          <div class="sim-row"><span>Open orders</span><strong id="openOrders">684</strong></div>
-          <div class="sim-row"><span>Search cache hit</span><strong id="cacheHit">93.1%</strong></div>
-        </div>
-      </aside>
-    </section>
-
-    <section class="section" id="research">
-      <div class="section-head">
-        <span class="eyebrow">Nghiên cứu & lập kế hoạch</span>
-        <h3>Định vị cạnh tranh, hành trình khách hàng và KPI cốt lõi</h3>
-      </div>
-
-      <div class="cards-3">
-        <article class="card">
-          <h4>3 nhóm đối thủ chính</h4>
-          <ul>
-            <li>Sàn lớn có logistics mạnh và giá cạnh tranh.</li>
-            <li>Brand D2C tối ưu trải nghiệm, nội dung và loyalty.</li>
-            <li>Nền tảng headless commerce cho doanh nghiệp scale nhanh.</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h4>KPI cần theo dõi</h4>
-          <ul>
-            <li><strong>CR</strong> — Conversion Rate theo source/device.</li>
-            <li><strong>AOV</strong> — Average Order Value theo campaign.</li>
-            <li><strong>LTV</strong> — Lifetime Value theo cohort.</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h4>Pháp lý & vận hành</h4>
-          <ul>
-            <li>Thuế, hoá đơn, hoàn trả, lưu trữ dữ liệu giao dịch.</li>
-            <li>Chính sách đổi trả minh bạch và SLA giao hàng.</li>
-            <li>Kiểm soát dữ liệu cá nhân theo GDPR / luật địa phương.</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="journey">
-      <div class="section-head">
-        <span class="eyebrow">User journey</span>
-        <h3>Hành trình mua hàng cho guest và logged-in</h3>
-      </div>
-
-      <div class="journey">
-        <article class="card">
-          <h4>Guest Journey</h4>
-          <p>Khách truy cập cần vào nhanh, tìm nhanh, checkout ngắn, ít cản trở đăng ký.</p>
-          <div class="journey-flow">
-            <span>Landing</span>
-            <span>Catalog</span>
-            <span>PDP</span>
-            <span>Cart</span>
-            <span>Checkout</span>
-            <span>Payment</span>
-            <span>Order Success</span>
-          </div>
-        </article>
-        <article class="card">
-          <h4>Logged-in Journey</h4>
-          <p>Người dùng đăng nhập cần cá nhân hoá, wishlist, địa chỉ lưu sẵn, đơn hàng và loyalty.</p>
-          <div class="journey-flow">
-            <span>Home Personalized</span>
-            <span>Search</span>
-            <span>Variant Select</span>
-            <span>Wishlist</span>
-            <span>Checkout 1-click</span>
-            <span>Track Order</span>
-            <span>Repeat Purchase</span>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="frontend">
-      <div class="section-head">
-        <span class="eyebrow">Frontend</span>
-        <h3>Mobile-first, component-driven, SSR/SSG và chuẩn accessibility</h3>
-        <p>
-          Khuyến nghị dùng React + Next.js cho SSR/SEO, atomic design cho component library, lazy load hình ảnh,
-          semantic HTML, keyboard navigation, contrast và focus states đạt WCAG AA.
-        </p>
-      </div>
-
-      <div class="feature-board">
-        <article class="card">
-          <h4>Wireframes / Component Library</h4>
-          <div class="wireframe-grid">
-            <div class="wire-box">
-              <div class="small-label">Product Listing</div>
-              <div class="wire-header"></div>
-              <div class="wire-line"></div>
-              <div class="wire-line short"></div>
-              <span class="wire-chip"></span><span class="wire-chip"></span><span class="wire-chip"></span>
-              <div class="wire-button"></div>
-            </div>
-            <div class="wire-box">
-              <div class="small-label">Product Detail</div>
-              <div class="wire-header"></div>
-              <div class="wire-line"></div>
-              <div class="wire-line"></div>
-              <div class="wire-line short"></div>
-              <div class="wire-button"></div>
-            </div>
-            <div class="wire-box">
-              <div class="small-label">Checkout Multi-step</div>
-              <div class="wire-header"></div>
-              <div class="wire-line"></div>
-              <div class="wire-line short"></div>
-              <span class="wire-chip"></span><span class="wire-chip"></span>
-              <div class="wire-button"></div>
-            </div>
-            <div class="wire-box">
-              <div class="small-label">Customer Account</div>
-              <div class="wire-header"></div>
-              <div class="wire-line"></div>
-              <div class="wire-line"></div>
-              <span class="wire-chip"></span><span class="wire-chip"></span><span class="wire-chip"></span>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <h4>Atomic design stack</h4>
-          <div class="stack">
-            <span>Atoms</span>
-            <span>Buttons</span>
-            <span>Inputs</span>
-            <span>Tags</span>
-            <span>Molecules</span>
-            <span>Cards</span>
-            <span>Filters</span>
-            <span>Mini Cart</span>
-            <span>Organisms</span>
-            <span>Header</span>
-            <span>PDP</span>
-            <span>Checkout</span>
-            <span>Templates</span>
-            <span>Pages</span>
-          </div>
-          <p>
-            Các màn cần có: product listing, PDP variant/gallery/zoom, cart, checkout nhiều bước, account,
-            notifications web + email, wishlist, review và dynamic promotion blocks.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <span class="eyebrow">Catalog & checkout demo</span>
-        <h3>Mô phỏng trải nghiệm người dùng ở trang danh mục và thanh toán</h3>
-      </div>
-
-      <div class="catalog-grid">
-        <aside class="card filters">
-          <h4>Filters / Sort</h4>
-          <div class="filter-group">
-            <h5>Danh mục</h5>
-            <div class="chip-row">
-              <span class="chip">Áo</span>
-              <span class="chip">Quần</span>
-              <span class="chip">Giày</span>
-              <span class="chip">Phụ kiện</span>
-            </div>
-          </div>
-          <div class="filter-group">
-            <h5>Giá</h5>
-            <div class="chip-row">
-              <span class="chip">&lt; 300K</span>
-              <span class="chip">300K - 700K</span>
-              <span class="chip">700K+</span>
-            </div>
-          </div>
-          <div class="filter-group">
-            <h5>Sort</h5>
-            <div class="chip-row">
-              <span class="chip">Mới nhất</span>
-              <span class="chip">Bán chạy</span>
-              <span class="chip">Giá tăng</span>
-            </div>
-          </div>
-          <p>Danh mục cần cache nóng, index search, lazy load ảnh và SEO metadata server-side.</p>
-        </aside>
-
-        <div class="product-grid">
-          <article class="product-card">
-            <div class="product-thumb">Product 01</div>
-            <div class="product-body">
-              <div class="badge">Best Seller</div>
-              <h4>Áo khoác Urban Tech</h4>
-              <p>Màu / Size / Variant / Review / Promotion</p>
-              <div class="price-row"><span class="price">₫690.000</span><button class="btn btn-secondary">Add cart</button></div>
-            </div>
-          </article>
-          <article class="product-card">
-            <div class="product-thumb">Product 02</div>
-            <div class="product-body">
-              <div class="badge">New Arrival</div>
-              <h4>Giày Street Motion</h4>
-              <p>Gallery / Zoom / Stock / Delivery ETA</p>
-              <div class="price-row"><span class="price">₫1.290.000</span><button class="btn btn-secondary">Wishlist</button></div>
-            </div>
-          </article>
-          <article class="product-card">
-            <div class="product-thumb">Product 03</div>
-            <div class="product-body">
-              <div class="badge">Promo -15%</div>
-              <h4>Túi Everyday Carry</h4>
-              <p>Dynamic pricing / Bundles / Review snippet</p>
-              <div class="price-row"><span class="price">₫540.000</span><button class="btn btn-secondary">View</button></div>
-            </div>
-          </article>
+        <div class="chat-actions">
+          <button class="icon-btn hidden-mobile" title="Gọi thoại">📞</button>
+          <button class="icon-btn hidden-mobile" title="Gọi video">📹</button>
+          <button class="icon-btn" id="toggleRight" title="Thông tin hội thoại">ℹ️</button>
         </div>
       </div>
 
-      <div class="checkout-layout" style="margin-top:18px;">
-        <article class="card">
-          <h4>Checkout nhiều bước</h4>
-          <div class="stepper">
-            <span class="step active">1. Thông tin</span>
-            <span class="step">2. Giao hàng</span>
-            <span class="step">3. Thanh toán</span>
-            <span class="step">4. Xác nhận</span>
-          </div>
-
-          <div class="form-grid">
-            <div class="field"><label>Họ và tên</label><input value="Nguyễn Văn A" /></div>
-            <div class="field"><label>Số điện thoại</label><input value="0901 234 567" /></div>
-            <div class="field"><label>Email</label><input value="customer@email.com" /></div>
-            <div class="field"><label>Quốc gia</label><select><option>Việt Nam</option></select></div>
-            <div class="field" style="grid-column:1/-1;"><label>Địa chỉ nhận hàng</label><input value="123 Nguyễn Huệ, Quận 1, TP.HCM" /></div>
-          </div>
-        </article>
-
-        <aside class="card">
-          <h4>Order summary</h4>
-          <div class="summary-list">
-            <div class="summary-item"><span>Tạm tính</span><strong>₫1.980.000</strong></div>
-            <div class="summary-item"><span>Giảm giá</span><strong>-₫120.000</strong></div>
-            <div class="summary-item"><span>Vận chuyển</span><strong>₫30.000</strong></div>
-            <div class="summary-item"><span>Tổng thanh toán</span><strong>₫1.890.000</strong></div>
-          </div>
-          <div class="stack">
-            <span>Visa/Mastercard</span>
-            <span>MoMo</span>
-            <span>ZaloPay</span>
-            <span>VNPay</span>
-            <span>COD</span>
-            <span>Wallet</span>
-          </div>
-          <button class="btn btn-primary" style="width:100%; margin-top:18px;">Tiếp tục thanh toán</button>
-        </aside>
-      </div>
-    </section>
-
-    <section class="section" id="backend">
-      <div class="section-head">
-        <span class="eyebrow">Backend</span>
-        <h3>Kiến trúc modular monolith hoặc microservices, mở rộng an toàn</h3>
+      <div class="messages" id="messages">
+        <div class="day-separator"><span>Hôm nay</span></div>
       </div>
 
-      <div class="glass architecture">
-        <div class="arch-col">
-          <h4>Experience Layer</h4>
-          <div class="arch-item">Next.js / Nuxt SSR</div>
-          <div class="arch-item">BFF / API Gateway</div>
-          <div class="arch-item">REST / GraphQL versioned</div>
-          <div class="arch-item">SEO metadata / localization</div>
-        </div>
-        <div class="arch-col">
-          <h4>Core Services</h4>
-          <div class="arch-item">Catalog</div>
-          <div class="arch-item">Cart</div>
-          <div class="arch-item">Orders</div>
-          <div class="arch-item">Payments / Auth</div>
-        </div>
-        <div class="arch-col">
-          <h4>Supporting Services</h4>
-          <div class="arch-item">Inventory</div>
-          <div class="arch-item">Notifications</div>
-          <div class="arch-item">Reporting</div>
-          <div class="arch-item">CRM / Shipping / Wallet webhooks</div>
-        </div>
-        <div class="arch-col">
-          <h4>Data Layer</h4>
-          <div class="arch-item">Postgres</div>
-          <div class="arch-item">Elasticsearch</div>
-          <div class="arch-item">Redis</div>
-          <div class="arch-item">CDC / ETL / backup policy</div>
+      <div class="typing" id="typingIndicator">Alex đang nhập...</div>
+
+      <div class="composer">
+        <div class="composer-inner">
+          <div class="composer-tools">
+            <button class="icon-btn" title="Gửi emoji" onclick="insertEmoji('😊')">😊</button>
+            <button class="icon-btn" title="Gửi sticker" onclick="sendSticker()">🟦</button>
+            <button class="icon-btn" title="Đính kèm file" onclick="fakeAttach()">📎</button>
+          </div>
+          <textarea id="messageInput" placeholder="Nhập tin nhắn..." rows="1"></textarea>
+          <button class="send-btn" id="sendBtn" title="Gửi">➤</button>
         </div>
       </div>
-    </section>
+    </main>
 
-    <section class="section">
-      <div class="section-head">
-        <span class="eyebrow">Data model</span>
-        <h3>ER scope và 4 bước quản lý đơn hàng chuẩn</h3>
-      </div>
-
-      <div class="cards-2">
-        <article class="card">
-          <h4>Thực thể dữ liệu chính</h4>
-          <div class="stack">
-            <span>Product</span>
-            <span>Variant</span>
-            <span>Inventory</span>
-            <span>Price</span>
-            <span>Cart</span>
-            <span>Order</span>
-            <span>Order Item</span>
-            <span>Transaction</span>
-            <span>Shipment</span>
-            <span>Address</span>
-            <span>Customer</span>
-            <span>Review</span>
+    <!-- RIGHT SIDEBAR -->
+    <aside class="sidebar-right">
+      <div class="section">
+        <div class="profile-card">
+          <div class="big-avatar" id="sideAvatar">A</div>
+          <div>
+            <div class="name" id="sideName">Alex Nguyen</div>
+            <div class="bio" id="sideBio">Thiết kế UI chat hiện đại, responsive, có demo real-time.</div>
           </div>
-          <p>
-            Import catalog nên chạy ETL hàng loạt; đồng bộ kho có thể dùng CDC hoặc event sourcing cho thay đổi tồn và đơn.
-          </p>
-        </article>
-        <article class="card">
-          <h4>Order lifecycle</h4>
-          <div class="summary-list">
-            <div class="order-step"><span>1. Tạo đơn</span><strong>Cart → Order Draft</strong></div>
-            <div class="order-step"><span>2. Xác nhận</span><strong>Payment auth / inventory reserve</strong></div>
-            <div class="order-step"><span>3. Giao hàng</span><strong>Shipment create / tracking update</strong></div>
-            <div class="order-step"><span>4. Hoàn thành</span><strong>Delivered / settlement / review trigger</strong></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Thông tin cuộc trò chuyện</h3>
+        <div class="info-list">
+          <div class="info-item"><strong>Trạng thái</strong><span id="sideStatus">Online</span></div>
+          <div class="info-item"><strong>Loại chat</strong><span>1-1</span></div>
+          <div class="info-item"><strong>Tin nhắn</strong><span id="msgCount">0</span></div>
+          <div class="info-item"><strong>Đã ghim</strong><span>3</span></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Ảnh đã chia sẻ</h3>
+        <div class="thumb-grid">
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Tùy chọn</h3>
+        <div class="toggle">
+          <div>
+            <div style="font-weight:700;font-size:13px;">Tắt thông báo</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px;">Không nhận thông báo từ cuộc chat này</div>
           </div>
-        </article>
-      </div>
-    </section>
+          <div class="switch" id="notifSwitch"></div>
+        </div>
 
-    <section class="section" id="analytics">
-      <div class="section-head">
-        <span class="eyebrow">Analytics & optimization</span>
-        <h3>A/B testing, funnel analysis và báo cáo tăng chuyển đổi</h3>
-      </div>
-
-      <div class="analytics-wrap">
-        <article class="card">
-          <h4>Funnel / Monetization</h4>
-          <div class="chart" id="funnelChart"></div>
-          <div class="chart-legend">
-            <span>Visit</span>
-            <span>PDP</span>
-            <span>Add Cart</span>
-            <span>Purchase</span>
+        <div class="toggle">
+          <div>
+            <div style="font-weight:700;font-size:13px;">Ghim cuộc trò chuyện</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px;">Luôn hiển thị ở đầu danh sách</div>
           </div>
-        </article>
-
-        <article class="card">
-          <h4>Events cần tracking</h4>
-          <div class="stack">
-            <span>page_view</span>
-            <span>search_submit</span>
-            <span>filter_apply</span>
-            <span>product_view</span>
-            <span>variant_select</span>
-            <span>add_to_cart</span>
-            <span>checkout_start</span>
-            <span>payment_success</span>
-            <span>refund_request</span>
-            <span>promo_apply</span>
-            <span>wishlist_add</span>
-            <span>review_submit</span>
-          </div>
-          <p>
-            Chạy cohort, funnel, experiment pricing, CTA, shipping incentive và layout mobile để tối ưu CR/AOV/LTV.
-          </p>
-        </article>
+          <div class="switch on"></div>
+        </div>
       </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <span class="eyebrow">Security & compliance</span>
-        <h3>PCI-DSS, rate limiting, CSP, TLS và chính sách dữ liệu</h3>
-      </div>
-
-      <div class="cards-4">
-        <article class="card">
-          <h4>Application Security</h4>
-          <p>Input validation, sanitization, CSRF/XSS protection, CSP, helmet headers, WAF, secret rotation.</p>
-        </article>
-        <article class="card">
-          <h4>Payments</h4>
-          <p>PCI-DSS boundary rõ ràng, tokenization, webhook verification, idempotency key cho thanh toán.</p>
-        </article>
-        <article class="card">
-          <h4>Identity</h4>
-          <p>OAuth2 + JWT + refresh token, MFA cho admin, session hardening, audit trail.</p>
-        </article>
-        <article class="card">
-          <h4>Data Governance</h4>
-          <p>GDPR/local compliance, retention policy, encryption at rest/in transit, backup drill định kỳ.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <span class="eyebrow">DevOps / QA</span>
-        <h3>Triển khai, quan sát hệ thống và kiểm thử nghiệm thu</h3>
-      </div>
-
-      <div class="cards-2">
-        <article class="card">
-          <h4>CI/CD & vận hành</h4>
-          <p>Docker + Kubernetes, autoscaling, blue/green hoặc canary, Prometheus + Grafana, alerting theo SLO/SLI.</p>
-          <div class="stack">
-            <span>Tests</span>
-            <span>Staging</span>
-            <span>Production</span>
-            <span>Canary</span>
-            <span>Rollback</span>
-            <span>Runbook</span>
-          </div>
-        </article>
-        <article class="card">
-          <h4>Testing & nghiệm thu</h4>
-          <p>Unit, integration, E2E, load tests 1000 concurrent, security scan, accessibility audit và disaster recovery test.</p>
-          <div class="stack">
-            <span>Unit</span>
-            <span>Integration</span>
-            <span>E2E</span>
-            <span>Load</span>
-            <span>Security</span>
-            <span>A11y</span>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="deliverables">
-      <div class="section-head">
-        <span class="eyebrow">Kết quả giao hàng</span>
-        <h3>Roadmap deliverables từ PRD đến deployed demo</h3>
-      </div>
-
-      <div class="timeline">
-        <article class="timeline-item">
-          <span class="phase">Phase 01</span>
-          <h4>PRD + nghiên cứu</h4>
-          <p>PRD, competitor snapshot, user journey, KPI framework, risk & compliance checklist.</p>
-        </article>
-        <article class="timeline-item">
-          <span class="phase">Phase 02</span>
-          <h4>UX/UI + component library</h4>
-          <p>Wireframes, design tokens, atomic components, responsive templates và accessibility baseline.</p>
-        </article>
-        <article class="timeline-item">
-          <span class="phase">Phase 03</span>
-          <h4>API + DB + pipeline</h4>
-          <p>OpenAPI, DB schema, auth flow, webhooks, ETL import, observability và CI pipeline.</p>
-        </article>
-        <article class="timeline-item">
-          <span class="phase">Phase 04</span>
-          <h4>Demo + runbook</h4>
-          <p>Deployed demo, load test summary, admin/reporting mock, runbook vận hành và handoff.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <span class="eyebrow">API / Database sample</span>
-        <h3>Bảng tóm tắt đặc tả kỹ thuật cần bàn giao</h3>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Hạng mục</th>
-              <th>Nội dung</th>
-              <th>Khuyến nghị</th>
-              <th>Output</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>API Spec</td>
-              <td>Catalog, Cart, Orders, Payments, Auth, Inventory, Notifications</td>
-              <td>REST + OpenAPI hoặc GraphQL BFF</td>
-              <td>Versioned spec + webhook contracts</td>
-            </tr>
-            <tr>
-              <td>Database</td>
-              <td>Product, Variant, Price, Cart, Order, Transaction, Shipment</td>
-              <td>Postgres + Redis + Elasticsearch</td>
-              <td>Schema + indexing strategy</td>
-            </tr>
-            <tr>
-              <td>Security</td>
-              <td>Auth, payment, data retention, WAF, CSP, TLS 1.3</td>
-              <td>Zero-trust service auth + audit log</td>
-              <td>Threat model + controls checklist</td>
-            </tr>
-            <tr>
-              <td>Operations</td>
-              <td>Build, deploy, monitor, alert, rollback</td>
-              <td>K8s + Prometheus + Grafana</td>
-              <td>CI pipeline + runbook + SLOs</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer container">
-    Một file HTML duy nhất — gộp sẵn HTML + CSS + JS cho prototype nền tảng ecommerce.
-  </footer>
+    </aside>
+  </div>
 
   <script>
-    const appState = {
-      mode: 'b2c',
-      b2c: {
-        deployModel: 'B2C Direct',
-        frontendModel: 'Next.js SSR',
-        backendModel: 'Modular Monolith',
-        paymentModel: 'PG + Wallet',
-        catalogLatency: '< 200ms',
-        conversionRate: '3.8%',
-        aovTarget: '₫780K',
-        platformScope: 'Multi-language / Multi-currency',
-        visitorsOnline: 18240,
-        activeCarts: 1482,
-        checkoutSuccess: 72.4,
-        openOrders: 684,
-        cacheHit: 93.1,
-        funnel: [100, 62, 24, 8]
+    const chats = [
+      {
+        id: 1,
+        name: "Alex Nguyen",
+        initials: "A",
+        last: "Ok, mình gửi file cho bạn ngay nhé.",
+        time: "09:42",
+        unread: 2,
+        online: true,
+        bio: "Thiết kế UI chat hiện đại, responsive, có demo real-time."
       },
-      marketplace: {
-        deployModel: 'Marketplace Hybrid',
-        frontendModel: 'Nuxt SSR',
-        backendModel: 'Microservices',
-        paymentModel: 'Escrow + PG + Wallet',
-        catalogLatency: '< 180ms',
-        conversionRate: '4.1%',
-        aovTarget: '₫920K',
-        platformScope: 'Multi-store / Multi-currency',
-        visitorsOnline: 26480,
-        activeCarts: 2316,
-        checkoutSuccess: 69.2,
-        openOrders: 1268,
-        cacheHit: 95.4,
-        funnel: [100, 58, 22, 9]
+      {
+        id: 2,
+        name: "Team Product",
+        initials: "T",
+        last: "Mai họp lúc 10h nhé mọi người.",
+        time: "08:11",
+        unread: 5,
+        online: false,
+        bio: "Nhóm trao đổi sản phẩm và thiết kế."
+      },
+      {
+        id: 3,
+        name: "Linh Tran",
+        initials: "L",
+        last: "Em gửi ảnh xong rồi đó.",
+        time: "Hôm qua",
+        unread: 0,
+        online: true,
+        bio: "Bạn bè / liên hệ"
+      },
+      {
+        id: 4,
+        name: "Support",
+        initials: "S",
+        last: "Cảm ơn bạn đã liên hệ.",
+        time: "Hôm qua",
+        unread: 1,
+        online: false,
+        bio: "Hỗ trợ khách hàng"
       }
+    ];
+
+    const sampleMessages = {
+      1: [
+        { sender: "other", text: "Chào bạn, mình vừa xem qua giao diện rồi.", time: "09:21", seen: true },
+        { sender: "me", text: "Tuyệt! Bạn thấy bố cục đã ổn chưa?", time: "09:24", seen: true },
+        { sender: "other", text: "Ổn rồi, nhìn rất hiện đại và dễ dùng.", time: "09:28", seen: true },
+        { sender: "me", text: "Ok, mình gửi file cho bạn ngay nhé.", time: "09:42", seen: false }
+      ],
+      2: [
+        { sender: "other", text: "Mai họp lúc 10h nhé mọi người.", time: "08:11", seen: true },
+        { sender: "me", text: "Đã nhận. Mình sẽ chuẩn bị demo.", time: "08:15", seen: true }
+      ],
+      3: [
+        { sender: "other", text: "Em gửi ảnh xong rồi đó.", time: "Hôm qua", seen: true },
+        { sender: "me", text: "Cảm ơn em nhé.", time: "Hôm qua", seen: true }
+      ],
+      4: [
+        { sender: "other", text: "Cảm ơn bạn đã liên hệ.", time: "Hôm qua", seen: true }
+      ]
     };
 
-    const refs = {
-      toggleModeBtn: document.getElementById('toggleModeBtn'),
-      simulateBtn: document.getElementById('simulateBtn'),
-      deployModel: document.getElementById('deployModel'),
-      frontendModel: document.getElementById('frontendModel'),
-      backendModel: document.getElementById('backendModel'),
-      paymentModel: document.getElementById('paymentModel'),
-      catalogLatency: document.getElementById('catalogLatency'),
-      conversionRate: document.getElementById('conversionRate'),
-      aovTarget: document.getElementById('aovTarget'),
-      platformScope: document.getElementById('platformScope'),
-      visitorsOnline: document.getElementById('visitorsOnline'),
-      activeCarts: document.getElementById('activeCarts'),
-      checkoutSuccess: document.getElementById('checkoutSuccess'),
-      openOrders: document.getElementById('openOrders'),
-      cacheHit: document.getElementById('cacheHit'),
-      funnelChart: document.getElementById('funnelChart')
-    };
+    const chatList = document.getElementById("chatList");
+    const messages = document.getElementById("messages");
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const searchInput = document.getElementById("searchInput");
+    const chatName = document.getElementById("chatName");
+    const chatStatus = document.getElementById("chatStatus");
+    const headerAvatar = document.getElementById("headerAvatar");
+    const sideAvatar = document.getElementById("sideAvatar");
+    const sideName = document.getElementById("sideName");
+    const sideBio = document.getElementById("sideBio");
+    const sideStatus = document.getElementById("sideStatus");
+    const typingIndicator = document.getElementById("typingIndicator");
+    const msgCount = document.getElementById("msgCount");
+    const themeToggle = document.getElementById("themeToggle");
+    const notifSwitch = document.getElementById("notifSwitch");
+    const toggleRight = document.getElementById("toggleRight");
+    const backToList = document.getElementById("backToList");
 
-    function currentConfig() {
-      return appState[appState.mode];
-    }
+    let activeChatId = 1;
+    let currentTheme = "light";
 
-    function formatNumber(value) {
-      return new Intl.NumberFormat('vi-VN').format(value);
-    }
+    function renderChatList(filter = "") {
+      chatList.innerHTML = "";
+      const filtered = chats.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
 
-    function renderChart(values) {
-      refs.funnelChart.innerHTML = '';
-      values.forEach((value) => {
-        const bar = document.createElement('div');
-        bar.className = 'bar';
-        bar.style.height = `${Math.max(24, value * 2)}px`;
-        bar.dataset.value = `${value}%`;
-        refs.funnelChart.appendChild(bar);
+      filtered.forEach(chat => {
+        const item = document.createElement("div");
+        item.className = `chat-item ${chat.id === activeChatId ? "active" : ""}`;
+        item.innerHTML = `
+          <div class="avatar ${chat.online ? "online" : ""}">${chat.initials}</div>
+          <div class="chat-meta">
+            <div class="row">
+              <div class="name">${chat.name}</div>
+              <div class="time">${chat.time}</div>
+            </div>
+            <div class="last">${chat.last}</div>
+          </div>
+          ${chat.unread > 0 ? `<div class="badge">${chat.unread}</div>` : ""}
+        `;
+        item.onclick = () => {
+          activeChatId = chat.id;
+          loadChat(chat.id);
+          renderChatList(searchInput.value);
+          if (window.innerWidth <= 820) {
+            document.body.classList.remove("show-left");
+          }
+        };
+        chatList.appendChild(item);
       });
     }
 
-    function renderDashboard() {
-      const cfg = currentConfig();
-      refs.deployModel.textContent = cfg.deployModel;
-      refs.frontendModel.textContent = cfg.frontendModel;
-      refs.backendModel.textContent = cfg.backendModel;
-      refs.paymentModel.textContent = cfg.paymentModel;
-      refs.catalogLatency.textContent = cfg.catalogLatency;
-      refs.conversionRate.textContent = cfg.conversionRate;
-      refs.aovTarget.textContent = cfg.aovTarget;
-      refs.platformScope.textContent = cfg.platformScope;
-      refs.visitorsOnline.textContent = formatNumber(cfg.visitorsOnline);
-      refs.activeCarts.textContent = formatNumber(cfg.activeCarts);
-      refs.checkoutSuccess.textContent = `${cfg.checkoutSuccess.toFixed(1)}%`;
-      refs.openOrders.textContent = formatNumber(cfg.openOrders);
-      refs.cacheHit.textContent = `${cfg.cacheHit.toFixed(1)}%`;
-      renderChart(cfg.funnel);
-    }
+    function renderMessages(chatId){
+      messages.innerHTML = `<div class="day-separator"><span>Hôm nay</span></div>`;
+      const list = sampleMessages[chatId] || [];
 
-    function toggleMode() {
-      appState.mode = appState.mode === 'b2c' ? 'marketplace' : 'b2c';
-      renderDashboard();
-    }
+      list.forEach(m => {
+        const row = document.createElement("div");
+        row.className = `msg-row ${m.sender === "me" ? "me" : "other"}`;
 
-    function simulateTraffic() {
-      const cfg = currentConfig();
-      const visitors = cfg.visitorsOnline + Math.floor(Math.random() * 3200);
-      const carts = cfg.activeCarts + Math.floor(Math.random() * 420);
-      const checkout = Math.max(55, cfg.checkoutSuccess + (Math.random() * 6 - 3));
-      const orders = cfg.openOrders + Math.floor(Math.random() * 180);
-      const cache = Math.max(84, cfg.cacheHit + (Math.random() * 2 - 1));
-      refs.visitorsOnline.textContent = formatNumber(visitors);
-      refs.activeCarts.textContent = formatNumber(carts);
-      refs.checkoutSuccess.textContent = `${checkout.toFixed(1)}%`;
-      refs.openOrders.textContent = formatNumber(orders);
-      refs.cacheHit.textContent = `${cache.toFixed(1)}%`;
+        const bubble = document.createElement("div");
+        bubble.className = `msg ${m.sender === "me" ? "me" : "other"}`;
+        bubble.innerHTML = `
+          <div>${escapeHTML(m.text)}</div>
+          <div class="meta">
+            <span>${m.time}</span>
+            ${m.sender === "me" ? `<span>${m.seen ? "Đã xem" : "Đã gửi"}</span>` : ""}
+          </div>
+        `;
 
-      const funnel = cfg.funnel.map((v, i) => {
-        const variance = i === 0 ? 0 : 4;
-        return Math.max(6, Math.min(100, v + Math.floor(Math.random() * variance * 2 - variance)));
+        row.appendChild(bubble);
+        messages.appendChild(row);
       });
-      renderChart(funnel);
+
+      messages.scrollTop = messages.scrollHeight;
+      msgCount.textContent = list.length;
     }
 
-    refs.toggleModeBtn.addEventListener('click', toggleMode);
-    refs.simulateBtn.addEventListener('click', simulateTraffic);
-    renderDashboard();
+    function loadChat(chatId){
+      const chat = chats.find(c => c.id === chatId);
+      if(!chat) return;
+
+      chatName.textContent = chat.name;
+      chatStatus.textContent = chat.online ? "Đang hoạt động" : "Offline";
+      headerAvatar.textContent = chat.initials;
+      headerAvatar.classList.toggle("online", chat.online);
+
+      sideAvatar.textContent = chat.initials;
+      sideName.textContent = chat.name;
+      sideBio.textContent = chat.bio;
+      sideStatus.textContent = chat.online ? "Online" : "Offline";
+
+      typingIndicator.classList.remove("show");
+      renderMessages(chatId);
+    }
+
+    function sendMessage(text){
+      if(!text.trim()) return;
+      const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+      sampleMessages[activeChatId].push({
+        sender: "me",
+        text,
+        time,
+        seen: false
+      });
+
+      const currentChat = chats.find(c => c.id === activeChatId);
+      currentChat.last = text.length > 28 ? text.slice(0, 28) + "..." : text;
+      currentChat.time = time;
+
+      renderChatList(searchInput.value);
+      renderMessages(activeChatId);
+      messageInput.value = "";
+      autoResize();
+
+      typingIndicator.classList.add("show");
+      setTimeout(() => {
+        typingIndicator.classList.remove("show");
+        const reply = [
+          "Ok nhé!",
+          "Mình đã nhận được.",
+          "Tuyệt vời, cảm ơn bạn.",
+          "Được rồi, mình xem ngay.",
+          "Hay quá!"
+        ][Math.floor(Math.random() * 5)];
+
+        sampleMessages[activeChatId].push({
+          sender: "other",
+          text: reply,
+          time: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+          seen: true
+        });
+
+        currentChat.last = reply;
+        renderChatList(searchInput.value);
+        renderMessages(activeChatId);
+      }, 1200);
+    }
+
+    function insertEmoji(emoji){
+      messageInput.value += emoji;
+      messageInput.focus();
+      autoResize();
+    }
+
+    function sendSticker(){
+      sendMessage("🟦 Sticker demo");
+    }
+
+    function fakeAttach(){
+      sendMessage("📎 Đã gửi một file đính kèm (demo)");
+    }
+
+    function escapeHTML(str){
+      return str
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function autoResize(){
+      messageInput.style.height = "auto";
+      messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + "px";
+    }
+
+    searchInput.addEventListener("input", (e) => renderChatList(e.target.value));
+
+    messageInput.addEventListener("input", autoResize);
+
+    messageInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" && !e.shiftKey){
+        e.preventDefault();
+        sendMessage(messageInput.value);
+      }
+    });
+
+    sendBtn.addEventListener("click", () => sendMessage(messageInput.value));
+
+    themeToggle.addEventListener("click", () => {
+      currentTheme = currentTheme === "light" ? "dark" : "light";
+      document.body.setAttribute("data-theme", currentTheme);
+      themeToggle.textContent = currentTheme === "light" ? "🌙" : "☀️";
+    });
+
+    notifSwitch.addEventListener("click", () => {
+      notifSwitch.classList.toggle("on");
+    });
+
+    toggleRight.addEventListener("click", () => {
+      document.body.classList.toggle("show-right");
+      document.body.classList.remove("show-left");
+    });
+
+    backToList.addEventListener("click", () => {
+      document.body.classList.toggle("show-left");
+      document.body.classList.remove("show-right");
+    });
+
+    // Fake typing animation
+    setInterval(() => {
+      if (activeChatId === 1 || activeChatId === 2) {
+        typingIndicator.classList.add("show");
+        setTimeout(() => typingIndicator.classList.remove("show"), 1000);
+      }
+    }, 8000);
+
+    // Init
+    renderChatList();
+    loadChat(activeChatId);
+    autoResize();
   </script>
 </body>
 </html>
